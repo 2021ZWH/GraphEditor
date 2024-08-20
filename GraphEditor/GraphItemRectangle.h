@@ -17,4 +17,4 @@ private:
   int lineW = 1;
 };
 
-#endif // GRAPH_ITEM_RECTANGLE_H
+#endif// GRAPH_ITEM_RECTANGLE_H

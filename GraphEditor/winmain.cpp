@@ -5,7 +5,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 {
 #ifdef _DEBUG
   AllocConsole();
-#endif // _DEBUG
+#endif// _DEBUG
 
   GraphEditor GE(hInstance,nullptr);
   GE.init();

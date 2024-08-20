@@ -57,6 +57,15 @@
     <ClInclude Include="GraphItemRectangle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ToolManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphEditor_def.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollBarManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -78,6 +87,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GraphItemRectangle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollBarManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -45,4 +45,4 @@ protected:
   HINSTANCE m_hIns = nullptr;
 
 };
-#endif // WINDOW_H
+#endif// WINDOW_H

@@ -12,9 +12,10 @@ public:
   ~ToolBar();
   void init();
   void destroy();
+  void resize();
 private:
   HIMAGELIST m_imgList = nullptr;
 
 };
-#endif // TOOL_BAR_H
+#endif// TOOL_BAR_H
 

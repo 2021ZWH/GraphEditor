@@ -1,16 +1,19 @@
 #include "GraphEditor.h"
 #include "resource.h"
 #include "ConSoleDebug.h"
+
 GraphEditor::GraphEditor(HINSTANCE hIns, HWND hParent)
 {
   Window::init(hIns, hParent);
 }
+
 GraphEditor::~GraphEditor()
 {
   delete m_pGView;
   delete m_ptoolBar;
   destroy();
 }
+
 void GraphEditor::init()
 {
   WNDCLASS WC = { 0 };
@@ -27,7 +30,7 @@ void GraphEditor::init()
   RegisterClass(&WC);
   m_hWnd = CreateWindow(TEXT("GraphEditor"),
     TEXT("GraphEditor"),
-    WS_OVERLAPPEDWINDOW,
+    WS_OVERLAPPEDWINDOW| WS_CLIPCHILDREN| WS_CLIPSIBLINGS,
     100, 50, 1200, 800,
     m_hParent,
     LoadMenu(m_hIns,MAKEINTRESOURCE(IDC_GRAPHEDITOR)),
@@ -41,15 +44,17 @@ void GraphEditor::init()
   m_pGView->init();
 
 }
+
 void GraphEditor::destroy()
 {
-  if (m_hWnd != nullptr)
+  if(m_hWnd != nullptr)
   {
     SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
     DestroyWindow(m_hWnd);
     m_hWnd = nullptr;
   }
 }
+
 LRESULT CALLBACK  GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg)
@@ -67,19 +72,33 @@ LRESULT CALLBACK  GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
     }
     default:
       GraphEditor* GE = reinterpret_cast<GraphEditor*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-      if (GE) return GE->runProc(uMsg, wParam, lParam);
+      if(GE) return GE->runProc(uMsg, wParam, lParam);
   }
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+
 LRESULT CALLBACK  GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);
   switch (uMsg)
   {
+  case WM_SIZE:
+    onSize(wParam,lParam);
+    break;
   case WM_DESTROY:
     PostQuitMessage(0);
     break;
   }
   return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+}
+
+void GraphEditor::onSize(WPARAM wParam, LPARAM lParam)
+{
+  int x = LOWORD(lParam);
+  int y = HIWORD(lParam);
+
+  m_ptoolBar->resize();
+ 
+  int toolH = m_ptoolBar->getHeight();
+  m_pGView->resize(x, y - toolH);
+
 }

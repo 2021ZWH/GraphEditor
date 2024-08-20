@@ -197,22 +197,22 @@ static LPCTSTR GetWindowsMsgStringFromMsgID(UINT messageId) {
     ); ITERN_WNDDOWSMSGID2STRING(WM_MBUTTONDOWN, 0x0207
     ); ITERN_WNDDOWSMSGID2STRING(WM_MBUTTONUP, 0x0208
     ); ITERN_WNDDOWSMSGID2STRING(WM_MBUTTONDBLCLK, 0x0209);
-#if (_WIN32_WINNT >=  0x0400) || (_WIN32_WINDOWS >  0x0400)
+#if(_WIN32_WINNT >=  0x0400) || (_WIN32_WINDOWS >  0x0400)
     ITERN_WNDDOWSMSGID2STRING(WM_MOUSEWHEEL, 0x020A);
 #endif
-#if (_WIN32_WINNT >=  0x0500)
+#if(_WIN32_WINNT >=  0x0500)
     ITERN_WNDDOWSMSGID2STRING(WM_XBUTTONDOWN, 0x020B
     ); ITERN_WNDDOWSMSGID2STRING(WM_XBUTTONUP, 0x020C
     ); ITERN_WNDDOWSMSGID2STRING(WM_XBUTTONDBLCLK, 0x020D);
 #endif
-#if (_WIN32_WINNT >=  0x0600)
+#if(_WIN32_WINNT >=  0x0600)
     ITERN_WNDDOWSMSGID2STRING(WM_MOUSEHWHEEL / WM_MOUSELAST, 0x020E);
 #endif
 
-#if (_WIN32_WINNT >=  0x0600) 
-#elif (_WIN32_WINNT >=  0x0500)
+#if(_WIN32_WINNT >=  0x0600) 
+#elif(_WIN32_WINNT >=  0x0500)
     ITERN_WNDDOWSMSGID2STRING(WM_MOUSELAST, 0x020D);
-#elif (_WIN32_WINNT >=  0x0400) || (_WIN32_WINDOWS >  0x0400)
+#elif(_WIN32_WINNT >=  0x0400) || (_WIN32_WINDOWS >  0x0400)
     ITERN_WNDDOWSMSGID2STRING(WM_MOUSELAST, 0x020A);
 #else
     ITERN_WNDDOWSMSGID2STRING(WM_MOUSELAST, 0x0209);
@@ -384,7 +384,7 @@ static LPCTSTR GetWindowsMsgStringFromMsgID(UINT messageId) {
   };
 #else
   return _T("The method is unused in undebug!");//非调试模式下返回值
-#endif // _DEBUG
+#endif// _DEBUG
 }
 static void ConsoleDebug(const TCHAR* pTchar, int size)
 {
@@ -392,7 +392,7 @@ static void ConsoleDebug(const TCHAR* pTchar, int size)
 #ifdef _DEBUG
   HANDLE hd = GetStdHandle(STD_OUTPUT_HANDLE);
   WriteConsole(hd, pTchar, size, NULL, NULL);
-#endif // DEBUG
+#endif// DEBUG
 }
 static void ConsoleDebugMessage(UINT message)
 {
@@ -405,13 +405,13 @@ static void ConsoleDebug(int num)
   bool flag = false;
   for (int i = 1e9; i > 0; i /= 10)
   {
-    if (num / i)
+    if(num / i)
     {
       pTchar[cnt++] = (num / i + '0');
       num %= i;
       flag = true;
     }
-    else if (flag)
+    else if(flag)
     {
       pTchar[cnt++] = '0';
 

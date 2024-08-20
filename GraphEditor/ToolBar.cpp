@@ -1,21 +1,25 @@
 #include "ToolBar.h"
 #include "resource.h"
+
 ToolBar::ToolBar(HINSTANCE hIns, HWND hParent)
 {
   Window::init(hIns, hParent);
 }
+
 ToolBar::~ToolBar()
 {
   destroy();
 }
+
 void ToolBar::destroy()
 {
-  if (m_hWnd)
+  if(m_hWnd)
   {
     DestroyWindow(m_hWnd);
     m_hWnd = nullptr;
   }
 }
+
 void ToolBar::init()
 {
   m_hWnd= CreateWindowEx(0,
@@ -45,5 +49,10 @@ void ToolBar::init()
 
   SendMessage(m_hWnd, TB_ADDBUTTONS, sizeof(tbb) / sizeof(TBBUTTON), (LPARAM)&tbb);
 
+  SendMessage(m_hWnd, TB_AUTOSIZE, 0, 0);
+}
+
+void ToolBar::resize()
+{
   SendMessage(m_hWnd, TB_AUTOSIZE, 0, 0);
 }
