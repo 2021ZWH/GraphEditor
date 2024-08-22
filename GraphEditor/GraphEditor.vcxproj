@@ -138,6 +138,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScrollBarManager.h" />
+    <ClInclude Include="SelectShapeManager.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ToolBar.h" />
@@ -152,12 +153,24 @@
     <ClCompile Include="GraphView.cpp" />
     <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="ScrollBarManager.cpp" />
+    <ClCompile Include="SelectShapeManager.cpp" />
     <ClCompile Include="ToolBar.cpp" />
     <ClCompile Include="ToolManager.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphEditor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ico\Bezier.ico" />
+    <Image Include="ico\Cursor.ico" />
+    <Image Include="ico\Curve.ico" />
+    <Image Include="ico\elliptic.ico" />
+    <Image Include="ico\Line.ico" />
+    <Image Include="ico\Rectangle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cur\Cross.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,6 +17,7 @@ private:
   static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
   LRESULT CALLBACK runProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
   void onSize(WPARAM wParam, LPARAM lParam);
+  void onCommand(WPARAM wParam, LPARAM lParam);
 
 private:
   ToolBar *m_ptoolBar = nullptr;

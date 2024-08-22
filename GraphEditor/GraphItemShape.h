@@ -10,6 +10,7 @@ public:
   virtual ~GraphItemShape() = default;
 
   virtual void draw(HDC hdc,int xoff, int yoff) = 0;
+  virtual void move(int dx, int dy) = 0;
   virtual bool isPointUpShape(const POINT& pos) = 0;
   virtual bool isRectCrossShape(const RECT& rect) = 0;
 

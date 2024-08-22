@@ -5,6 +5,16 @@
 #include <CommCtrl.h>
 #include "Window.h"
 #pragma comment(lib ,"Comctl32.lib")
+
+enum IDM_TBBUTTON {
+  BT_EDITMODE = 1,
+  BT_LINE,
+  BT_CURVE,
+  BT_BEZIER,
+  BT_RECTANGLE,
+  BT_ELLIPTIC
+};
+
 class ToolBar : public Window
 {
 public:

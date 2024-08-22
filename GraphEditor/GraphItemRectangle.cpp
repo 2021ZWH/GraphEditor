@@ -1,9 +1,29 @@
 #include "GraphItemRectangle.h"
 
-GraphItemRectangle::GraphItemRectangle()
+GraphItemRectangle::GraphItemRectangle(const RECT& rect)
+  :m_rect(rect)
 {
 
 }
+
+GraphItemRectangle::GraphItemRectangle(const POINT& pos, int w, int h)
+{
+  m_rect.left = pos.x;
+  m_rect.right = pos.x + w;
+  m_rect.top = pos.y;
+  m_rect.bottom = pos.y + h;
+
+}
+
+GraphItemRectangle::GraphItemRectangle(const POINT& startPos, const POINT& endPos)
+{
+  m_rect.left = startPos.x;
+  m_rect.right = endPos.x;
+  m_rect.top = startPos.y;
+  m_rect.bottom = endPos.y;
+
+}
+
 GraphItemRectangle::~GraphItemRectangle()
 {
 
@@ -16,7 +36,18 @@ void GraphItemRectangle::draw(HDC hdc,int xoff, int yoff)
   int top = m_rect.top - yoff;
   int bottom = m_rect.bottom - yoff;
   
+  HBRUSH hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
+  HBRUSH hOldBru = (HBRUSH)SelectObject(hdc, hbru);
   Rectangle(hdc,left, top, right, bottom);
+  SelectObject(hdc, hOldBru);
+}
+
+void GraphItemRectangle::move(int dx, int dy)
+{
+  m_rect.left += dx;
+  m_rect.right += dx;
+  m_rect.top += dy;
+  m_rect.bottom += dy;
 }
 
 bool GraphItemRectangle::isPointUpShape(const POINT& pos)

@@ -54,8 +54,8 @@ void GraphEditor::destroy()
     m_hWnd = nullptr;
   }
 }
-
-LRESULT CALLBACK  GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+ 
+LRESULT CALLBACK GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg)
   {
@@ -77,10 +77,15 @@ LRESULT CALLBACK  GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-LRESULT CALLBACK  GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+  ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);
   switch (uMsg)
   {
+  case WM_COMMAND:
+    onCommand(wParam, lParam);
+    break;
   case WM_SIZE:
     onSize(wParam,lParam);
     break;
@@ -101,4 +106,19 @@ void GraphEditor::onSize(WPARAM wParam, LPARAM lParam)
   int toolH = m_ptoolBar->getHeight();
   m_pGView->resize(x, y - toolH);
 
+}
+
+void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
+{
+  ConsoleDebug((int)(wParam));
+  ConsoleDebug(L"\n", 1);
+  switch(wParam)
+  {
+  case BT_EDITMODE:
+    m_pGView->setMode(ToolType::EDIT_MOUSE);
+    break;
+  case BT_RECTANGLE:
+    m_pGView->setMode(ToolType::DRAW_RECTANGLE);
+    break;
+  }
 }
