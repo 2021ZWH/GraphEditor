@@ -15,7 +15,6 @@ GraphView::~GraphView()
   DeleteObject(m_hBgdBru);
   destroy();
 }
-
 void GraphView::init()
 {
 
@@ -42,8 +41,6 @@ void GraphView::init()
     m_hIns,
     this);
 
- 
- 
   ShowWindow(m_hWnd, SW_SHOW);
 }
 
@@ -75,6 +72,11 @@ void GraphView::setMode(ToolType toolType)
 
 POINT GraphView::mapToScene(const POINT &viewPos)
 {
+  POINT centerPos = { getWidth() / 2,getHeight() / 2 };
+  POINT viewRawPos;  // 解缩放
+  viewRawPos.x = (viewPos.x - centerPos.x)/m_scale + centerPos.x;
+  viewRawPos.y = (viewPos.y - centerPos.y)/m_scale + centerPos.y;
+
   int xPos = m_pSbMger->getHBarPos();
   int yPos = m_pSbMger->getVBarPos();
 
@@ -82,8 +84,8 @@ POINT GraphView::mapToScene(const POINT &viewPos)
   int yoff = yPos * m_pSbMger->getUnitH() - m_pGhMger->getHeight() / 2;
 
   POINT retPos;
-  retPos.x = viewPos.x + xoff;
-  retPos.y = viewPos.y + yoff;
+  retPos.x = viewRawPos.x + xoff;
+  retPos.y = viewRawPos.y + yoff;
 
   return retPos;
 }
@@ -96,9 +98,14 @@ POINT GraphView::mapToView(const POINT& scenePos)
   int xoff = xPos * m_pSbMger->getUnitW() - m_pGhMger->getWidth() / 2;
   int yoff = yPos * m_pSbMger->getUnitH() - m_pGhMger->getHeight() / 2;
 
-  POINT retPos;
-  retPos.x = scenePos.x - xoff;
-  retPos.y = scenePos.y - xoff;
+  POINT viewRawPos;
+  viewRawPos.x = scenePos.x - xoff;
+  viewRawPos.y = scenePos.y - xoff;
+
+  POINT centerPos = { getWidth() / 2,getHeight() / 2 };
+  POINT retPos; // 缩放
+  retPos.x = m_scale * (viewRawPos.x - centerPos.x) + centerPos.x;
+  retPos.y = m_scale * (viewRawPos.y - centerPos.y) + centerPos.y;
   return retPos;
 }
 
@@ -184,37 +191,32 @@ void GraphView::onPaint()
   PAINTSTRUCT ps;
   HDC hdc = BeginPaint(m_hWnd, &ps);
 
-  int boardW = 2000;
-  int boardH = 2000;
-
-  HDC hdcMem = CreateCompatibleDC(hdc);
-  HBITMAP hbmMem = CreateCompatibleBitmap(hdcMem, boardW, boardH);
-  SelectObject(hdcMem, hbmMem);
-  RECT rec = { 0,0,boardW,boardH };
-
   int xClient = getWidth();
   int yClient = getHeight();
 
-  // 这里要分块去重绘，减少花屏
-  for(int x = 0; x * boardW < xClient; x++)
-  {
-    for(int y = 0; y* boardH < yClient; y++)
-    {
-      POINT beginPos = mapToScene({ x* boardW,y* boardH });
-      POINT endPos = mapToScene({ min(xClient,(x + 1) * boardW),min(yClient,(y + 1) * boardH) });
+  int mapW = xClient / m_scale;
+  int mapH = yClient / m_scale;
 
-      RECT updateRec;
-      updateRec.left = beginPos.x;
-      updateRec.top = beginPos.y;
-      updateRec.right = endPos.x;
-      updateRec.bottom = endPos.y;
+  HDC hdcMem = CreateCompatibleDC(hdc);
+  HBITMAP hbmMem = CreateCompatibleBitmap(hdcMem, mapW, mapH);
+  SelectObject(hdcMem, hbmMem);
+  RECT rec = { 0,0,mapW,mapH };
 
-      FillRect(hdcMem, &rec, m_hBgdBru);
-      m_pGhMger->paint(hdcMem, updateRec);
-                     
-      BitBlt(hdc, x * boardW, y * boardH, min(xClient, (x + 1) * boardW), min(yClient, (y + 1) * boardH), hdcMem, 0, 0, SRCCOPY);
-    }
-  }
+  POINT beginPos = mapToScene({ 0,0 });
+  POINT endPos = mapToScene({ xClient,yClient });
+
+  RECT updateRec;
+  updateRec.left = beginPos.x;
+  updateRec.top = beginPos.y;
+  updateRec.right = endPos.x;
+  updateRec.bottom = endPos.y;
+
+  FillRect(hdcMem, &rec, m_hBgdBru);
+  m_pGhMger->paint(hdcMem, updateRec);
+  
+  StretchBlt(hdc, 0, 0, xClient, yClient,
+    hdcMem, 0, 0, mapW, mapH, SRCCOPY);
+  //BitBlt(hdc, x * boardW, y * boardH, min(xClient, (x + 1) * boardW), min(yClient, (y + 1) * boardH), hdcMem, 0, 0, SRCCOPY);
 
   DeleteObject(hbmMem);
   DeleteDC(hdcMem);
@@ -236,9 +238,6 @@ void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
   m_startPos = m_endPos = { x,y };
 
   m_pGhMger->onMouseLButtonDown(mapToScene({ x,y }));
-   
-
-
 }
 
 void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
@@ -289,11 +288,13 @@ void GraphView::onMouseMove(WPARAM wParam, LPARAM lParam)
 void GraphView::onMouseWheel(WPARAM wParam, LPARAM lParam)
 {
   int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-  int zPos = -zDelta / WHEEL_DELTA;
+  int zPos = zDelta / WHEEL_DELTA;
 
   bool fCtrlDown = (GetKeyState(VK_CONTROL) < 0);
   if(fCtrlDown)
   {
+    double preScale = m_scale;
+
     if(zPos > 0 && m_scale < 8)
     {
       if(m_scale >= 1) m_scale += 1;
@@ -304,6 +305,14 @@ void GraphView::onMouseWheel(WPARAM wParam, LPARAM lParam)
       
       if(m_scale > 1) m_scale -= 1;
       else m_scale /= 2;
+    }
+
+    if(m_scale != preScale)
+    {
+      m_pSbMger->setHBar(getWidth() * m_scale, m_pGhMger->getWidth());
+      m_pSbMger->setVBar(getHeight() * m_scale, m_pGhMger->getHeight());
+
+      InvalidateRect(m_hWnd, NULL, false);
     }
   }
 }

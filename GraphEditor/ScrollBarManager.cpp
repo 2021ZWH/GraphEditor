@@ -160,8 +160,9 @@ void ScrollBarManager::onWMHScroll(WPARAM wParam, LPARAM lParam)
   if(xPos != si.nPos)// 说明发生了变化
   {
     // 
-    ScrollWindow(m_hWnd, (xPos - si.nPos) * m_unitW, 0, NULL, NULL);
-    UpdateWindow(m_hWnd);
+    InvalidateRect(m_hWnd,NULL, false);
+   /* ScrollWindow(m_hWnd, (xPos - si.nPos) * m_unitW, 0, NULL, NULL);
+    UpdateWindow(m_hWnd);*/
   }
 }
 
@@ -195,8 +196,9 @@ void ScrollBarManager::onWMVScroll(WPARAM wParam, LPARAM lParam)
   GetScrollInfo(m_hWnd, SB_VERT, &si);
   if(yPos != si.nPos)// 说明发生了变化
   {
-    ScrollWindow(m_hWnd, 0, (yPos - si.nPos) * m_unitH, NULL, NULL);
-    UpdateWindow(m_hWnd);
+    InvalidateRect(m_hWnd, NULL, false);
+   /* ScrollWindow(m_hWnd, 0, (yPos - si.nPos) * m_unitH, NULL, NULL);
+    UpdateWindow(m_hWnd);*/
   }
 }
 

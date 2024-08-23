@@ -9,9 +9,41 @@
 #define BGR_WHITE      0x00FFFFFF
 #define BGR_LIGHTBLUE  0x00D2923F
 
-#define BGDCOLOR       (0x00c8c8c8)
-#define MAX_SCENE_WIDTH 20000
-#define MAX_SCENE_HEIGHT 20000
+#define BGDCOLOR          (0x00c8c8c8)
+#define MAX_SCENE_WIDTH   20000
+#define MAX_SCENE_HEIGHT  20000
 
+struct PointF
+{
+  PointF() :x(0), y(0) {};
+
+  double x;
+  double y;
+
+  POINT toPoint() const
+  {
+    int intX = (int)(x + 0.5);
+    int intY = (int)(y + 0.5);
+    return { intX,intY };
+  }
+
+};
+
+struct RectF
+{
+  double left;
+  double top;
+  double right;
+  double bottom;
+
+  RECT toRect() const
+  {
+    int intL = (int)(left + 0.5);
+    int intT = (int)(top + 0.5);
+    int intR = (int)(right + 0.5);
+    int intB = (int)(bottom + 0.5);
+    return { intL,intT,intR,intB };
+  }
+};
 
 #endif// GRAPH_EDITOR_DEF_H
