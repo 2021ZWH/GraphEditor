@@ -10,9 +10,14 @@ public:
   bool isSelect()const;
   void addShape(GraphItemShape* pItemShape);
   void clearSelect();
-  Vector<GraphItemShape*> &getSelect();
+  void setHandler(ControlHandler *handler);
+  Vector<GraphItemShape*> &getShape();
+  ControlHandler* getHandler();
+  PointF getBeginPos() const;
 private:
   Vector<GraphItemShape*> m_selectShape;
+  PointF m_beginPos;
+  ControlHandler* m_selectHandler = nullptr;
 
 };
 

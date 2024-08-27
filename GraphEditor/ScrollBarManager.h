@@ -27,5 +27,5 @@ private:
   int   m_unitW;
 };
 
-#endif
+#endif // SCROLLBAR_MANAGER_H
 

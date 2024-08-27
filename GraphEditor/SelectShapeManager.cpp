@@ -16,7 +16,22 @@ void SelectShapeManager::clearSelect()
   m_selectShape.clear();
 }
 
-Vector<GraphItemShape*>& SelectShapeManager::getSelect()
+void SelectShapeManager::setHandler(ControlHandler* handler)
+{
+  m_selectHandler = handler;
+}
+
+Vector<GraphItemShape*>& SelectShapeManager::getShape()
 {
   return this->m_selectShape;
+}
+
+ControlHandler* SelectShapeManager::getHandler()
+{
+  return m_selectHandler;
+}
+
+PointF SelectShapeManager::getBeginPos() const
+{
+  return m_beginPos;
 }

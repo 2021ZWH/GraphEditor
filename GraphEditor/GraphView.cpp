@@ -15,6 +15,7 @@ GraphView::~GraphView()
   DeleteObject(m_hBgdBru);
   destroy();
 }
+
 void GraphView::init()
 {
 
@@ -70,10 +71,10 @@ void GraphView::setMode(ToolType toolType)
   m_pToolMger->setToolType(toolType);
 }
 
-POINT GraphView::mapToScene(const POINT &viewPos)
+PointF GraphView::mapToScene(const POINT &viewPos)
 {
-  POINT centerPos = { getWidth() / 2,getHeight() / 2 };
-  POINT viewRawPos;  // 解缩放
+  PointF centerPos = { (double)getWidth() / 2,(double)getHeight() / 2 };
+  PointF viewRawPos;  // 解缩放
   viewRawPos.x = (viewPos.x - centerPos.x)/m_scale + centerPos.x;
   viewRawPos.y = (viewPos.y - centerPos.y)/m_scale + centerPos.y;
 
@@ -83,14 +84,14 @@ POINT GraphView::mapToScene(const POINT &viewPos)
   int xoff = xPos * m_pSbMger->getUnitW() - m_pGhMger->getWidth() / 2;
   int yoff = yPos * m_pSbMger->getUnitH() - m_pGhMger->getHeight() / 2;
 
-  POINT retPos;
+  PointF retPos;
   retPos.x = viewRawPos.x + xoff;
   retPos.y = viewRawPos.y + yoff;
 
   return retPos;
 }
 
-POINT GraphView::mapToView(const POINT& scenePos)
+POINT GraphView::mapToView(const PointF& scenePos)
 {
   int xPos = m_pSbMger->getHBarPos();
   int yPos = m_pSbMger->getVBarPos();
@@ -98,16 +99,16 @@ POINT GraphView::mapToView(const POINT& scenePos)
   int xoff = xPos * m_pSbMger->getUnitW() - m_pGhMger->getWidth() / 2;
   int yoff = yPos * m_pSbMger->getUnitH() - m_pGhMger->getHeight() / 2;
 
-  POINT viewRawPos;
+  PointF viewRawPos;
   viewRawPos.x = scenePos.x - xoff;
-  viewRawPos.y = scenePos.y - xoff;
+  viewRawPos.y = scenePos.y - yoff;
 
-  POINT centerPos = { getWidth() / 2,getHeight() / 2 };
-  POINT retPos; // 缩放
+  PointF centerPos = { (double)getWidth() / 2,(double)getHeight() / 2 };
+  PointF retPos; // 缩放
   retPos.x = m_scale * (viewRawPos.x - centerPos.x) + centerPos.x;
   retPos.y = m_scale * (viewRawPos.y - centerPos.y) + centerPos.y;
-  return retPos;
-}
+  return retPos.toPoint();
+} 
 
 LRESULT CALLBACK GraphView::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -135,8 +136,8 @@ LRESULT CALLBACK GraphView::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);
+ /* ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);*/
   switch (uMsg)
   {
   case WM_LBUTTONDOWN:
@@ -158,7 +159,7 @@ LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     onCreate();
     break;
   case WM_SETCURSOR:
-    onSetCursor();
+    onSetCursor(lParam);
     return true;
   case WM_HSCROLL:
     m_pSbMger->onWMHScroll(wParam,lParam);
@@ -202,17 +203,17 @@ void GraphView::onPaint()
   SelectObject(hdcMem, hbmMem);
   RECT rec = { 0,0,mapW,mapH };
 
-  POINT beginPos = mapToScene({ 0,0 });
-  POINT endPos = mapToScene({ xClient,yClient });
+  PointF beginPos = mapToScene({ 0,0 });
+  PointF endPos = mapToScene({ xClient,yClient });
 
-  RECT updateRec;
-  updateRec.left = beginPos.x;
-  updateRec.top = beginPos.y;
-  updateRec.right = endPos.x;
-  updateRec.bottom = endPos.y;
+  RectF updateRecf;
+  updateRecf.left = beginPos.x;
+  updateRecf.top = beginPos.y;
+  updateRecf.right = endPos.x;
+  updateRecf.bottom = endPos.y;
 
   FillRect(hdcMem, &rec, m_hBgdBru);
-  m_pGhMger->paint(hdcMem, updateRec);
+  m_pGhMger->paint(hdcMem, updateRecf,m_scale);
   
   StretchBlt(hdc, 0, 0, xClient, yClient,
     hdcMem, 0, 0, mapW, mapH, SRCCOPY);
@@ -223,11 +224,20 @@ void GraphView::onPaint()
   EndPaint(m_hWnd, &ps);
 }
 
-void GraphView::onSetCursor()
+void GraphView::onSetCursor(LPARAM lParam)
 {
+  POINT cursorPos;
+  GetCursorPos(&cursorPos);
+  ScreenToClient(m_hWnd, &cursorPos);
+
   if(m_pToolMger->getToolType() == ToolType::EDIT_MOUSE)
-    SetCursor(LoadCursor(NULL,IDC_ARROW));
-  else SetCursor(LoadCursor(NULL, IDC_CROSS));
+  {
+    SetCursor(m_pGhMger->getCursor(mapToScene(cursorPos)));
+  }
+  else
+  {
+    SetCursor(LoadCursor(NULL, IDC_CROSS));
+  }
 }
   
 void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -244,6 +254,8 @@ void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
 {
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
+
+  m_pGhMger->onMouseLButtonUp(mapToScene({ x,y }));
 
   HDC hdc = GetDC(m_hWnd);
   m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos); 
@@ -274,6 +286,12 @@ void GraphView::onMouseMove(WPARAM wParam, LPARAM lParam)
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
 
+  m_pGhMger->onMouseMove(1, mapToScene({ x,y }));
+
+  if(m_pToolMger->getToolType() == ToolType::EDIT_MOUSE
+    && m_pGhMger->isSelect())
+    return;
+
   HDC hdc = GetDC(m_hWnd);
 
   m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
@@ -282,7 +300,7 @@ void GraphView::onMouseMove(WPARAM wParam, LPARAM lParam)
   
   ReleaseDC(m_hWnd, hdc);
 
-  m_pGhMger->onMouseMove(1, mapToScene({ x,y }));
+  
 }
 
 void GraphView::onMouseWheel(WPARAM wParam, LPARAM lParam)

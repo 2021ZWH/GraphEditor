@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include "Window.h"
+#include "GraphEditor_def.h"
 #include "GraphManager.h"
 #include "ScrollBarManager.h"
 #include "ToolManager.h"
@@ -16,14 +17,14 @@ public:
   void destroy();
   void resize(int w, int h);
   void setMode(ToolType toolType);
-  POINT mapToScene(const POINT &viewPos);
-  POINT mapToView(const POINT &scenePos);
+  PointF mapToScene(const POINT &viewPos);
+  POINT mapToView(const PointF &scenePos);
 private:
   static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
   LRESULT CALLBACK runProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
   void onCreate();
   void onPaint();
-  void onSetCursor();
+  void onSetCursor(LPARAM lParam);
   void onMouseLButtonDown(WPARAM wParam, LPARAM lParam);
   void onMouseLButtonUp(WPARAM wParam, LPARAM lParam);
   void onMouseMove(WPARAM wParam, LPARAM lParam);
@@ -41,4 +42,4 @@ private:
 
 };
 
-#endif// GRAPH_VIEW_H
+#endif // GRAPH_VIEW_H

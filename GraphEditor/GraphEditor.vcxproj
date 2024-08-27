@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ConSoleDebug.h" />
+    <ClInclude Include="ControlHandler.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="GraphItemRectangle.cpp" />
     <ClCompile Include="GraphItemShape.cpp" />

@@ -13,10 +13,11 @@
 #define MAX_SCENE_WIDTH   20000
 #define MAX_SCENE_HEIGHT  20000
 
+
+#include <math.h>
+
 struct PointF
 {
-  PointF() :x(0), y(0) {};
-
   double x;
   double y;
 

@@ -2,22 +2,23 @@
 #define GRAPH_ITEM_RECTANGLE_H
 
 #include "GraphItemShape.h"
+#include "GraphEditor_def.h"
 
 class GraphItemRectangle : public GraphItemShape
 {
 public: 
-  GraphItemRectangle(const RECT &rect);
-  GraphItemRectangle(const POINT& pos, int w, int h);
-  GraphItemRectangle(const POINT& startPos, const POINT& endPos);
+  GraphItemRectangle(PointF beginPos, PointF endPos);
   ~GraphItemRectangle();
-  void draw(HDC hdc,int xoff, int yoff) override;
-  void move(int dx,int dy) override;
+  void drawShape(HDC hdc, double xoff, double yoff) override;
+  void move(double dx, double dy) override;
   
-  bool isPointUpShape(const POINT& pos) override;
-  bool isRectCrossShape(const RECT& rect) override;
-
+  bool isPointUpShape(const PointF& pos) override;
+  bool isRectCrossShape(const RectF& rectf) override;
+  bool shapeResize(double dx,double dy, ControlHandler* handler) override;
 private:
-  RECT m_rect;
+  void updateCtrHandler();
+private:
+  RectF m_rectf;
   int lineW = 1;
 };
 
