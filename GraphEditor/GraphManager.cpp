@@ -75,7 +75,7 @@ bool GraphManager::isSelect() const
 void GraphManager::addShape(GraphItemShape* shape)
 {
   m_shapeVec.push_back(shape);
-  
+  m_selectMger.addShape(shape);
 }
 
 void GraphManager::onMouseLButtonDown(const PointF& scenePos)

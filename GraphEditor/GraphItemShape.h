@@ -21,6 +21,9 @@ public:
   virtual bool shapeResize(double dx,double dy, ControlHandler* handler) = 0;
 
 protected:
+  void clearCtrHandler();
+
+protected:
   Vector<ControlHandler*> m_ctrHandlers;
 
 };

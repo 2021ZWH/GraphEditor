@@ -45,6 +45,13 @@ struct RectF
     int intB = (int)(bottom + 0.5);
     return { intL,intT,intR,intB };
   }
+
+  bool isPointIn(const PointF& pos) const
+  {
+    if(pos.x < left || pos.x > right) return false;
+    if(pos.y < top || pos.y > bottom) return false;
+    return true;
+  }
 };
 
-#endif// GRAPH_EDITOR_DEF_H
+#endif // GRAPH_EDITOR_DEF_H

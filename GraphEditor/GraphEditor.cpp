@@ -117,6 +117,9 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
   case BT_EDITMODE:
     m_pGView->setMode(ToolType::EDIT_MOUSE);
     break;
+  case BT_LINE:
+    m_pGView->setMode(ToolType::DRAW_LINE);
+    break;
   case BT_RECTANGLE:
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);
     break;

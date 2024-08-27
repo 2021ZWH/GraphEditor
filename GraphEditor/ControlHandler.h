@@ -16,6 +16,7 @@ enum HandlerType
   HT_SE,
   HT_SOUTH, // v
   HT_SW,
+  HT_ALL,
   HT_INVALID
 };
 

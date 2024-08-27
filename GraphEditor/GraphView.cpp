@@ -265,7 +265,10 @@ void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
   GraphItemShape* pItemShape = nullptr;
   switch(m_pToolMger->getToolType())
   {
-    case ToolType::DRAW_RECTANGLE:
+    case DRAW_LINE:
+      pItemShape = new GraphItemLine(mapToScene(m_startPos), mapToScene(m_endPos));
+      break;
+    case DRAW_RECTANGLE:
       pItemShape = new GraphItemRectangle(mapToScene(m_startPos), mapToScene(m_endPos));
       break;
   }

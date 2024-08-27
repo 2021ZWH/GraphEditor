@@ -5,6 +5,7 @@
 #include "GraphEditor_def.h"
 #include "GraphItemShape.h"
 #include "GraphItemRectangle.h"
+#include "GraphItemLine.h"
 #include "Vector.h"
 #include "SelectShapeManager.h"
 

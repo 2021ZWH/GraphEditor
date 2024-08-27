@@ -2,11 +2,7 @@
 
 GraphItemShape::~GraphItemShape()
 {
-  for(int i = 0; i < m_ctrHandlers.size(); i++)
-  {
-    delete m_ctrHandlers[i];
-    m_ctrHandlers[i] = nullptr;
-  }
+  clearCtrHandler();
 }
 
 void GraphItemShape::drawHandler(HDC hdc, double xoff, double yoff, double scale)
@@ -26,4 +22,13 @@ ControlHandler* GraphItemShape::getHandlerByPos(const PointF& pos)
   }
 
   return nullptr;
+}
+
+void GraphItemShape::clearCtrHandler()
+{
+  for(int i = 0; i < m_ctrHandlers.size(); i++)
+  {
+    delete m_ctrHandlers[i];
+    m_ctrHandlers[i] = nullptr;
+  }
 }

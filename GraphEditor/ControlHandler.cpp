@@ -29,6 +29,9 @@ ControlHandler::ControlHandler(GraphItemShape *owner,HandlerType type,int id)
   case HT_SW:
     m_hCursor = LoadCursor(NULL, IDC_SIZENESW);
     break;
+  case HT_ALL:
+    m_hCursor = LoadCursor(NULL, IDC_SIZEALL);
+    break;
   }
 }
 

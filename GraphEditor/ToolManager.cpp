@@ -40,6 +40,14 @@ void ToolManager::drawRubberBand(HDC hdc, const POINT& startPos, const POINT& en
   case EDIT_MOUSE:
     Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
     break;
+  case DRAW_LINE:
+    {
+      POINT pos;
+      MoveToEx(hdc, startPos.x, startPos.y, &pos);
+      LineTo(hdc, endPos.x, endPos.y);
+      MoveToEx(hdc, pos.x, pos.y, NULL);
+      break;
+    }
   case DRAW_RECTANGLE:
     Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
     break;
