@@ -54,9 +54,8 @@ bool GraphItemLine::isPointUpShape(const PointF& pos)
 
 bool GraphItemLine::isRectCrossShape(const RectF& rectf)
 {
-  if(rectf.isPointIn(m_posA) || rectf.isPointIn(m_posB))
-    return true;
-  return false;
+  SegmentF seg = { m_posA,m_posB };
+  return rectf.isSegmentIntersect(seg);
 }
 
 bool GraphItemLine::shapeResize(double dx, double dy, ControlHandler* handler)

@@ -32,3 +32,8 @@ void GraphItemShape::clearCtrHandler()
     m_ctrHandlers[i] = nullptr;
   }
 }
+
+void GraphItemShape::addPos(const PointF& pos)
+{
+
+}

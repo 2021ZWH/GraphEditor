@@ -133,6 +133,7 @@
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
     <ClInclude Include="GraphItemLine.h" />
+    <ClInclude Include="GraphItemPolyline.h" />
     <ClInclude Include="GraphItemRectangle.h" />
     <ClInclude Include="GraphItemShape.h" />
     <ClInclude Include="GraphView.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="GraphItemLine.cpp" />
+    <ClCompile Include="GraphItemPolyline.cpp" />
     <ClCompile Include="GraphItemRectangle.cpp" />
     <ClCompile Include="GraphItemShape.cpp" />
     <ClCompile Include="GraphView.cpp" />
@@ -171,6 +173,7 @@
     <Image Include="ico\Curve.ico" />
     <Image Include="ico\elliptic.ico" />
     <Image Include="ico\Line.ico" />
+    <Image Include="ico\Polyline.ico" />
     <Image Include="ico\Rectangle.ico" />
   </ItemGroup>
   <ItemGroup>

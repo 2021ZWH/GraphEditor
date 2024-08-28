@@ -6,6 +6,7 @@
 #include "GraphItemShape.h"
 #include "GraphItemRectangle.h"
 #include "GraphItemLine.h"
+#include "GraphItemPolyline.h"
 #include "Vector.h"
 #include "SelectShapeManager.h"
 
@@ -24,7 +25,7 @@ public:
 
   void addShape(GraphItemShape* shape);
 
-  void onMouseLButtonDown(const PointF& scenePos);
+  void onMouseLButtonDown(const PointF& scenePos,bool canSelect);
   void onMouseMove(bool fLButtonDown, const PointF& scenePos);
   void onMouseLButtonUp(const PointF& scenePos);
 private:

@@ -136,8 +136,8 @@ LRESULT CALLBACK GraphView::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
- /* ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);*/
+  ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);
   switch (uMsg)
   {
   case WM_LBUTTONDOWN:
@@ -145,6 +145,9 @@ LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
   case WM_LBUTTONUP:
     onMouseLButtonUp(wParam, lParam);
+    break;
+  case WM_RBUTTONDOWN:
+    onMouseRButtonDown(wParam, lParam);
     break;
   case WM_MOUSEMOVE:
     onMouseMove(wParam, lParam);
@@ -247,7 +250,21 @@ void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
   
   m_startPos = m_endPos = { x,y };
 
-  m_pGhMger->onMouseLButtonDown(mapToScene({ x,y }));
+  m_pGhMger->onMouseLButtonDown(mapToScene({ x,y }),m_pToolMger->getToolType() == EDIT_MOUSE);
+
+  if(m_pToolMger->getToolType() == DRAW_POLYLINE)
+  {
+    GraphItemShape* pItemShape = nullptr;
+    if(m_pToolMger->isValidShape())
+      m_pToolMger->updateShape(mapToScene(m_startPos), mapToScene(m_endPos));
+    else
+    {
+      pItemShape = new GraphItemPolyline(mapToScene(m_startPos));
+      m_pToolMger->setShape(pItemShape);
+      m_pGhMger->addShape(pItemShape);
+    }
+    InvalidateRect(m_hWnd, NULL, false);
+  }
 }
 
 void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
@@ -258,17 +275,20 @@ void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
   m_pGhMger->onMouseLButtonUp(mapToScene({ x,y }));
 
   HDC hdc = GetDC(m_hWnd);
-  m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos); 
-
   m_endPos = { x,y };
 
   GraphItemShape* pItemShape = nullptr;
   switch(m_pToolMger->getToolType())
   {
+    case EDIT_MOUSE:
+      m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
+      break;
     case DRAW_LINE:
+      m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
       pItemShape = new GraphItemLine(mapToScene(m_startPos), mapToScene(m_endPos));
       break;
     case DRAW_RECTANGLE:
+      m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
       pItemShape = new GraphItemRectangle(mapToScene(m_startPos), mapToScene(m_endPos));
       break;
   }
@@ -282,28 +302,52 @@ void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
   ReleaseDC(m_hWnd, hdc);
 }
 
-void GraphView::onMouseMove(WPARAM wParam, LPARAM lParam)
+void GraphView::onMouseRButtonDown(WPARAM wParam, LPARAM lParam)
 {
-  if(wParam != MK_LBUTTON) return;
-
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
 
-  m_pGhMger->onMouseMove(1, mapToScene({ x,y }));
+  if(m_pToolMger->isValidShape())
+  {
+    m_pToolMger->setShape(nullptr);
+  }
+}
 
-  if(m_pToolMger->getToolType() == ToolType::EDIT_MOUSE
-    && m_pGhMger->isSelect())
-    return;
+void GraphView::onMouseMove(WPARAM wParam, LPARAM lParam)
+{
+  int x = GET_X_LPARAM(lParam);
+  int y = GET_Y_LPARAM(lParam);
 
-  HDC hdc = GetDC(m_hWnd);
 
-  m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
-  m_endPos = { x,y };
-  m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
-  
-  ReleaseDC(m_hWnd, hdc);
+  if(m_pToolMger->isValidShape())
+  {
+    HDC hdc = GetDC(m_hWnd);
 
-  
+    m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
+    m_endPos = { x,y };
+    m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
+
+    ReleaseDC(m_hWnd, hdc);
+  }
+
+
+  if(wParam == MK_LBUTTON)
+  {
+    if(m_pToolMger->getToolType() == EDIT_MOUSE)
+    m_pGhMger->onMouseMove(1, mapToScene({ x,y }));
+
+    if(m_pToolMger->getToolType() == ToolType::EDIT_MOUSE
+      && m_pGhMger->isSelect())
+      return;
+
+    HDC hdc = GetDC(m_hWnd);
+
+    m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
+    m_endPos = { x,y };
+    m_pToolMger->drawRubberBand(hdc, m_startPos, m_endPos);
+
+    ReleaseDC(m_hWnd, hdc);
+  }
 }
 
 void GraphView::onMouseWheel(WPARAM wParam, LPARAM lParam)

@@ -30,6 +30,44 @@ struct PointF
 
 };
 
+struct SegmentF
+{
+  PointF posA;
+  PointF posB;
+
+  bool isPointIn(const PointF pos, double err = 0) const
+  {
+    if(pos.x > max(posA.x, posB.x) || pos.x < min(posA.x, posB.x))
+      return false;
+    if(pos.y > max(posA.y, posB.y) || pos.y < min(posA.y, posB.y))
+      return false;
+
+    double left = (pos.x - posA.x) * (posB.y - posA.y);
+    double right = (posB.x - posA.x) * (pos.y - posA.y);
+
+    if(fabs(left - right) <= err)
+      return true;
+    return false;
+  }
+
+  bool isSegmentIntersect(const SegmentF& other) const
+  {
+    PointF Q1 = other.posA;
+    PointF Q2 = other.posB;
+
+    if(((Q1.x - posA.x) * (Q1.y - Q2.y) - (Q1.y - posA.y) * (Q1.x - Q2.x)) *
+       ((Q1.x - posB.x) * (Q1.y - Q2.y) - (Q1.y - posB.y) * (Q1.x - Q2.x)) < 0)
+      return true;
+
+    if(((posA.x - Q1.x) * (posA.y - posB.y) - (posA.y - Q1.y) * (posA.x - posB.x)) * 
+       ((posA.x - Q2.x) * (posA.y - posB.y) - (posA.y - Q2.y) * (posA.x - posB.x)) < 0)
+      return true;
+
+    return true;
+  }
+
+};
+
 struct RectF
 {
   double left;
@@ -52,6 +90,36 @@ struct RectF
     if(pos.y < top || pos.y > bottom) return false;
     return true;
   }
+
+  bool isSegmentIntersect(const SegmentF &seg) const
+  { 
+    // 判断线段两点是否在矩形
+    if(isPointIn(seg.posA)) return true;
+    if(isPointIn(seg.posB)) return true;
+
+    //判断线段与矩形对角线是否相交
+    SegmentF segA = { {left,top},{right,bottom} };
+    SegmentF segB = { {right,top},{left,bottom} };
+    if(segA.isSegmentIntersect(seg)) return true;
+    if(segB.isSegmentIntersect(seg)) return true;
+
+    return false;
+  }
+
+  bool isRectIntersect(const RectF& other) const
+  {
+    // 判断两矩形的相交矩形是否合法
+    double minFx = max(left, other.left);
+    double maxFx = min(right, other.right);
+    if(maxFx < minFx) return false;
+
+    double minFy = max(top, other.top);
+    double maxFy = min(bottom, other.bottom);
+    if(maxFy < minFy) return false;
+
+    return true;
+  }
+
 };
 
 #endif // GRAPH_EDITOR_DEF_H

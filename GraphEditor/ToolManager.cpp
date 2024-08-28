@@ -37,23 +37,62 @@ void ToolManager::drawRubberBand(HDC hdc, const POINT& startPos, const POINT& en
 
   switch(m_nowType)
   {
-  case EDIT_MOUSE:
-    Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
-    break;
-  case DRAW_LINE:
-    {
-      POINT pos;
-      MoveToEx(hdc, startPos.x, startPos.y, &pos);
-      LineTo(hdc, endPos.x, endPos.y);
-      MoveToEx(hdc, pos.x, pos.y, NULL);
+    case EDIT_MOUSE:
+      Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
       break;
-    }
-  case DRAW_RECTANGLE:
-    Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
-    break;
+    case DRAW_LINE:
+      {
+        POINT pos;
+        MoveToEx(hdc, startPos.x, startPos.y, &pos);
+        LineTo(hdc, endPos.x, endPos.y);
+        MoveToEx(hdc, pos.x, pos.y, NULL);
+        break;
+      }
+    case DRAW_POLYLINE:
+      {
+        POINT pos;
+        MoveToEx(hdc, startPos.x, startPos.y, &pos);
+        LineTo(hdc, endPos.x, endPos.y);
+        MoveToEx(hdc, pos.x, pos.y, NULL);
+        break;
+      }
+    case DRAW_RECTANGLE:
+      Rectangle(hdc, startPos.x, startPos.y, endPos.x, endPos.y);
+      break;
   }
 
   SelectObject(hdc,oldHBru);
   SelectObject(hdc,oldHPen);
   DeleteObject(hPen);
 }
+
+bool ToolManager::isValidShape() const
+{
+  return m_drawShape != nullptr;
+}
+
+bool ToolManager::updateShape(const PointF& startPos, const PointF& endPos)
+{
+  if(!isValidShape()) return false;
+
+  switch(m_nowType)
+  {
+  case DRAW_POLYLINE:
+    m_drawShape->addPos(endPos);
+    break;
+  }
+
+  return true;
+}
+
+void ToolManager::setShape(GraphItemShape *shape)
+{
+  m_drawShape = shape;
+}
+
+void ToolManager::clearShape()
+{
+  m_drawShape = nullptr;
+}
+
+

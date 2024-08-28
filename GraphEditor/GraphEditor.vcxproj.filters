@@ -75,6 +75,9 @@
     <ClInclude Include="GraphItemLine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GraphItemPolyline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -113,6 +116,9 @@
     <ClCompile Include="GraphItemLine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GraphItemPolyline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphEditor.rc">
@@ -136,6 +142,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="ico\elliptic.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\Polyline.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

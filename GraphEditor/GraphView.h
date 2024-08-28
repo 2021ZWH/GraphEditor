@@ -27,6 +27,7 @@ private:
   void onSetCursor(LPARAM lParam);
   void onMouseLButtonDown(WPARAM wParam, LPARAM lParam);
   void onMouseLButtonUp(WPARAM wParam, LPARAM lParam);
+  void onMouseRButtonDown(WPARAM wParam, LPARAM lParam);
   void onMouseMove(WPARAM wParam, LPARAM lParam);
   void onMouseWheel(WPARAM wParam, LPARAM lParam);
 private:

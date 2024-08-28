@@ -19,10 +19,9 @@ public:
   virtual bool isPointUpShape(const PointF& pos) = 0;
   virtual bool isRectCrossShape(const RectF& rectf) = 0;
   virtual bool shapeResize(double dx,double dy, ControlHandler* handler) = 0;
-
+  virtual void addPos(const PointF& pos);
 protected:
-  void clearCtrHandler();
-
+  virtual void clearCtrHandler();
 protected:
   Vector<ControlHandler*> m_ctrHandlers;
 

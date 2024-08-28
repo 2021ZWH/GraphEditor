@@ -79,8 +79,8 @@ LRESULT CALLBACK GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 
 LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);
+  /*ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);*/
   switch (uMsg)
   {
   case WM_COMMAND:
@@ -119,6 +119,9 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
     break;
   case BT_LINE:
     m_pGView->setMode(ToolType::DRAW_LINE);
+    break;
+  case BT_POLYLINE:
+    m_pGView->setMode(ToolType::DRAW_POLYLINE);
     break;
   case BT_RECTANGLE:
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);

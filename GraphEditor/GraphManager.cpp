@@ -78,9 +78,17 @@ void GraphManager::addShape(GraphItemShape* shape)
   m_selectMger.addShape(shape);
 }
 
-void GraphManager::onMouseLButtonDown(const PointF& scenePos)
+void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
 {
   bool freshWnd = false;
+
+  if(!canSelect)
+  {
+    m_selectMger.setHandler(nullptr);
+    m_selectMger.clearSelect();
+    InvalidateRect(m_hWnd, NULL, false);
+    return;
+  }
 
   m_selectMger.setHandler(nullptr); // 判断是否选中控制点
   Vector<GraphItemShape*> vec = m_selectMger.getShape();
