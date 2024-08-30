@@ -98,6 +98,7 @@ void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
     if(handler != nullptr)
     {
       m_selectMger.setHandler(handler);
+      handler->getOwnerShape()->SetSelectHandler(handler);
       break;
     }
   }

@@ -77,6 +77,16 @@ int ControlHandler::getId() const
   return this->m_id;
 }
 
+void ControlHandler::SetSelect(bool fSelect)
+{
+  m_fSelect = fSelect;
+}
+
+bool ControlHandler::isSelect() const
+{
+  return m_fSelect;
+}
+
 HCURSOR ControlHandler::getCursor()
 {
   return m_hCursor;
@@ -91,3 +101,4 @@ GraphItemShape* ControlHandler::getOwnerShape()
 {
   return m_ownerShape;
 }
+

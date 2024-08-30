@@ -133,6 +133,7 @@
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
     <ClInclude Include="GraphItemLine.h" />
+    <ClInclude Include="GraphItemPolyBezier.h" />
     <ClInclude Include="GraphItemPolyline.h" />
     <ClInclude Include="GraphItemRectangle.h" />
     <ClInclude Include="GraphItemShape.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="GraphItemLine.cpp" />
+    <ClCompile Include="GraphItemPolyBezier.cpp" />
     <ClCompile Include="GraphItemPolyline.cpp" />
     <ClCompile Include="GraphItemRectangle.cpp" />
     <ClCompile Include="GraphItemShape.cpp" />

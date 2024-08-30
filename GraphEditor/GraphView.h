@@ -30,6 +30,11 @@ private:
   void onMouseRButtonDown(WPARAM wParam, LPARAM lParam);
   void onMouseMove(WPARAM wParam, LPARAM lParam);
   void onMouseWheel(WPARAM wParam, LPARAM lParam);
+
+  void startDraw(const POINT& pos);
+  void drawNext(const POINT& pos);
+  void onDraw(bool fLButtonDown,const POINT& pos);
+  void endDraw(const POINT& pos);
 private:
   double    m_scale = 1.0;
   HBRUSH    m_hBgdBru;
@@ -38,8 +43,10 @@ private:
   ScrollBarManager  *m_pSbMger = nullptr;
   ToolManager       *m_pToolMger = nullptr;
 
-  POINT m_startPos;
-  POINT m_endPos;
+  PointF m_startPos;
+  PointF m_endPos;
+  PointF m_aptF[4];
+  bool isDrawing = false;
 
 };
 

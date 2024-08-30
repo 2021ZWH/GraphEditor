@@ -1,4 +1,4 @@
-#ifndef GRAPH_ITEM_SHAPE_H
+ #ifndef GRAPH_ITEM_SHAPE_H
 #define GRAPH_ITEM_SHAPE_H
 
 #include <Windows.h>
@@ -20,10 +20,13 @@ public:
   virtual bool isRectCrossShape(const RectF& rectf) = 0;
   virtual bool shapeResize(double dx,double dy, ControlHandler* handler) = 0;
   virtual void addPos(const PointF& pos);
+  virtual void SetSelectHandler(ControlHandler* handler);
+  virtual void resetSelect();
 protected:
   virtual void clearCtrHandler();
 protected:
   Vector<ControlHandler*> m_ctrHandlers;
+  ControlHandler* m_selectHandler = nullptr;
 
 };
 

@@ -27,9 +27,9 @@ public:
   void draw(HDC hdc,double xoff,double yoff,double w);
   void move(double dx, double dy);
   bool isPointInHandler(const PointF &pos);
-
   void setPos(const PointF& pos);
-
+  void SetSelect(bool fSelect);
+  bool isSelect() const;
   int getId() const;
   GraphItemShape* getOwnerShape();
   HCURSOR getCursor();
@@ -42,6 +42,7 @@ private:
   PointF m_ctrPos;
   int m_width = 12;
   int m_id;
+  bool m_fSelect = false;
 };
 
 #endif // CONTROL_HANDLER_H

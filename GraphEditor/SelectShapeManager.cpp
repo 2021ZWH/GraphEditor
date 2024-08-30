@@ -13,12 +13,21 @@ void SelectShapeManager::addShape(GraphItemShape* pItemShape)
 
 void SelectShapeManager::clearSelect()
 {
+  for(int i = 0; i < m_selectShape.size(); i++)
+    m_selectShape[i]->resetSelect();
   m_selectShape.clear();
 }
 
 void SelectShapeManager::setHandler(ControlHandler* handler)
 {
+  
+  if(m_selectHandler)
+    m_selectHandler->SetSelect(false);
   m_selectHandler = handler;
+
+  if(handler) 
+  m_selectHandler->SetSelect(true);
+  
 }
 
 Vector<GraphItemShape*>& SelectShapeManager::getShape()

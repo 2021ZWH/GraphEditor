@@ -37,3 +37,14 @@ void GraphItemShape::addPos(const PointF& pos)
 {
 
 }
+
+void GraphItemShape::SetSelectHandler(ControlHandler *handler)
+{
+  m_selectHandler = handler;
+
+}
+
+void GraphItemShape::resetSelect()
+{
+  m_selectHandler = nullptr;
+}

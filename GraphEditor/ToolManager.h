@@ -20,9 +20,9 @@ public:
   ~ToolManager();
   void setToolType(ToolType newType);
   ToolType getToolType() const;
-  void drawRubberBand(HDC hdc, const POINT& startpos, const POINT& endPos);
+  void drawRubberBand(HDC hdc, const POINT& pos1, const POINT& pos2, const POINT& pos3={0,0}, const POINT& pos4={0,0});
   bool isValidShape() const;
-  bool updateShape(const PointF& startPos, const PointF& endPos);
+  bool updateShape(const PointF& pos1, const PointF& pos2 = { 0,0 }, const PointF &pos3 = { 0,0 });
   void setShape(GraphItemShape *shape);
   void clearShape();
 private:
