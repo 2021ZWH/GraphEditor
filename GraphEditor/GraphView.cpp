@@ -410,6 +410,8 @@ void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
   switch(m_pToolMger->getToolType())
   {
     case DRAW_LINE:
+    case DRAW_CIRCLE:
+    case DRAW_ELLIPTIC:
     case DRAW_RECTANGLE:
     {
       if(fLButtonDown)
@@ -481,6 +483,11 @@ void GraphView::endDraw(const POINT& pos)
     pItemShape = new GraphItemLine(m_startPos, m_endPos);
     break;
 
+  case DRAW_ELLIPTIC:
+    m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+    pItemShape = new GraphItemElliptic(m_startPos, m_endPos);
+    break;
+
   case DRAW_RECTANGLE:
     m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
     pItemShape = new GraphItemRectangle(m_startPos, m_endPos);
@@ -495,6 +502,13 @@ void GraphView::endDraw(const POINT& pos)
     }
     break;
   case DRAW_BEZIER:
+    if(m_pToolMger->isValidShape())
+    {
+      m_aptF[3] = mapToScene(pos);
+      m_pToolMger->updateShape(m_aptF[1], m_aptF[2], m_aptF[3]);
+      m_pToolMger->setShape(nullptr);
+      InvalidateRect(m_hWnd, NULL, false);
+    }
     break;
   }
 

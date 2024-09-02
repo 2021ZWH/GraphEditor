@@ -40,17 +40,60 @@ void GraphItemPolyBezier::move(double dx, double dy)
 
 bool GraphItemPolyBezier::isPointUpShape(const PointF& pos)
 {
-  return true;
+  for(int i = 0; i + 3 < m_aptf.size(); i += 3)
+  {
+    if(isPointInLine(pos, i)) return true;
+  }
+  return false;
 }
 
 bool GraphItemPolyBezier::isRectCrossShape(const RectF& rectf)
 {
-  return  true;
+  for(int i = 0; i < m_aptf.size(); i+=3)
+  {
+    if(rectf.isPointIn(m_aptf[i]))
+      return true;
+  }
+
+  for(int i = 0; i+3 < m_aptf.size(); i += 3)
+  {
+    if(isRectInLine(rectf,i))
+      return true;
+  }
+
+  return  false;
 }
 
 bool GraphItemPolyBezier::shapeResize(double dx, double dy, ControlHandler* handler)
 {
-  return false;
+  int id = handler->getId();
+  if(handler->getOwnerShape() != this) return false;
+
+  if(id % 3 == 0) // 说明移动的是端点
+  {
+    m_aptf[id].x += dx;
+    m_aptf[id].y += dy;
+    m_ctrHandlers[id]->setPos(m_aptf[id]);
+    if(id - 1 >= 0)
+    {
+      m_aptf[id - 1].x += dx;
+      m_aptf[id - 1].y += dy;
+      m_ctrHandlers[id - 1]->setPos(m_aptf[id - 1]);
+    }
+    if(id + 1 < m_aptf.size())
+    {
+      m_aptf[id + 1].x += dx;
+      m_aptf[id + 1].y += dy;
+      m_ctrHandlers[id + 1]->setPos(m_aptf[id + 1]);
+    }
+  }
+  else // 移动控制点
+  {
+    m_aptf[id].x += dx;
+    m_aptf[id].y += dy;
+    m_ctrHandlers[id]->setPos(m_aptf[id]);
+  }
+  return true;
 }
 
 void GraphItemPolyBezier::addPos(const PointF& pos)
@@ -78,6 +121,9 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
     if(id % 3 == 1) id--;
     else if(id % 3 == 2) id++; // 转换为端点id
 
+    HPEN blueDashPen = CreatePen(PS_DASH, 1, RGB(0, 0, 255));
+    HPEN oldPen = (HPEN)SelectObject(hdc, blueDashPen);
+
     if(id - 1 >= 0)
     {
       m_ctrHandlers[id - 1]->draw(hdc, xoff, yoff, 12 * scale);
@@ -85,14 +131,11 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
       PointF posB = m_aptf[id];
       posA.x -= xoff, posA.y -= yoff;
       posB.x -= xoff, posB.y -= yoff;
-      HPEN blueDashPen = CreatePen(PS_DASH, 1, BGR_LIGHTBLUE);
-      HPEN oldPen = (HPEN)SelectObject(hdc, blueDashPen);
-      MoveToEx(hdc, posA.x, posB.y, NULL);
+      
+      MoveToEx(hdc, posA.x, posA.y, NULL);
       LineTo(hdc, posB.x, posB.y);
-      SelectObject(hdc, oldPen);
-      DeleteObject(blueDashPen);
-
     }
+
     if(id + 1 < m_ctrHandlers.size())
     {
       m_ctrHandlers[id + 1]->draw(hdc, xoff, yoff, 12 * scale);
@@ -100,14 +143,13 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
       PointF posB = m_aptf[id];
       posA.x -= xoff, posA.y -= yoff;
       posB.x -= xoff, posB.y -= yoff;
-      HPEN blueDashPen = CreatePen(PS_DASH, 1, BGR_LIGHTBLUE);
-      HPEN oldPen = (HPEN)SelectObject(hdc, blueDashPen);
-      MoveToEx(hdc, posA.x, posB.y, NULL);
+
+      MoveToEx(hdc, posA.x, posA.y, NULL);
       LineTo(hdc, posB.x, posB.y);
-      SelectObject(hdc, oldPen);
-      DeleteObject(blueDashPen);
     }
 
+    SelectObject(hdc, oldPen);
+    DeleteObject(blueDashPen);
   }
 }
 
@@ -136,4 +178,59 @@ ControlHandler* GraphItemPolyBezier::getHandlerByPos(const PointF& pos)
     }
   }
   return nullptr;
+}
+
+bool GraphItemPolyBezier::isPointInLine(const PointF &pos,int id)
+{
+  PointF p0 = m_aptf[id];
+  PointF p1 = m_aptf[id + 1];
+  PointF p2 = m_aptf[id + 2];
+  PointF p3 = m_aptf[id + 3];
+
+  PointF b;
+
+  for(int i = 0; i <= 100; i++) // 将每段曲线分成100个点，判断点是否在附近
+  {
+    double t = 1.0 / 100 * i;
+    b.x = pow(1 - t, 3.0) * p0.x + 3 * t * pow(1 - t, 2.0) * p1.x + 3 * pow(t, 2) * (1 - t) * p2.x + pow(t, 3) * p3.x;
+    b.y = pow(1 - t, 3.0) * p0.y + 3 * t * pow(1 - t, 2.0) * p1.y + 3 * pow(t, 2) * (1 - t) * p2.y + pow(t, 3) * p3.y;
+    
+    if(pow(pos.x - b.x,2) + pow(pos.y - b.y, 2) < 4) return true;
+  }
+
+  return false;
+}
+
+bool GraphItemPolyBezier::isRectInLine(const RectF& rect, int id)
+{
+  PointF p0 = m_aptf[id];
+  PointF p1 = m_aptf[id + 1];
+  PointF p2 = m_aptf[id + 2];
+  PointF p3 = m_aptf[id + 3];
+
+  PointF b;
+  bool status[4][2];
+  memset(status, 0, sizeof status);
+  for(int i = 0; i <= 100; i++) // 将每段曲线分成100个点，判断点是否在附近
+  {
+    double t = 1.0 / 100 * i;
+    b.x = pow(1 - t, 3.0) * p0.x + 3 * t * pow(1 - t, 2.0) * p1.x + 3 * pow(t, 2) * (1 - t) * p2.x + pow(t, 3) * p3.x;
+    b.y = pow(1 - t, 3.0) * p0.y + 3 * t * pow(1 - t, 2.0) * p1.y + 3 * pow(t, 2) * (1 - t) * p2.y + pow(t, 3) * p3.y;
+    
+    if(b.x < rect.left) status[0][0] = true;
+    else if(b.x > rect.left) status[0][1] = true;
+
+    if(b.y < rect.top) status[1][0] = true;
+    else if(b.y > rect.top) status[1][1] = true;
+
+    if(b.x < rect.right) status[2][0] = true;
+    else if(b.x > rect.right) status[2][1] = true;
+
+    if(b.y < rect.bottom) status[3][0] = true;
+    else if(b.y > rect.bottom) status[3][1] = true;
+    
+    for(int i = 0; i < 4; i++)
+      if(status[i][0] && status[i][1]) return true;
+  }
+  return false;
 }

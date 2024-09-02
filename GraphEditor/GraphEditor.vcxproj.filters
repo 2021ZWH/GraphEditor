@@ -81,6 +81,9 @@
     <ClInclude Include="GraphItemPolyBezier.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GraphItemElliptic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -125,6 +128,9 @@
     <ClCompile Include="GraphItemPolyBezier.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GraphItemElliptic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphEditor.rc">
@@ -151,6 +157,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="ico\Polyline.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\Circle.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

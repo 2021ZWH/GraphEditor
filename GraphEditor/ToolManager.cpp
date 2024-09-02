@@ -75,6 +75,11 @@ void ToolManager::drawRubberBand(HDC hdc, const POINT& pos1, const POINT& pos2, 
       delete[] apt;
       break;
     }
+    case DRAW_ELLIPTIC:
+    {
+      Ellipse(hdc, pos1.x, pos1.y, pos2.x, pos2.y);
+      break;
+    }
     case DRAW_RECTANGLE:
       Rectangle(hdc, pos1.x, pos1.y, pos2.x, pos2.y);
       break;

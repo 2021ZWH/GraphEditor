@@ -32,11 +32,11 @@ void ToolBar::init()
     m_hIns,
     NULL);
 
-  m_imgList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 6, 0);
+  m_imgList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 7, 0);
 
-  WORD icoId[6] = { IDI_CURSOR,IDI_LINE,IDI_POLYLINE,IDI_BEZIER,IDI_RECTANGLE,IDI_ELLIPTIC };
-  int iIcon[6];
-  for(int i = 0; i < 6; i++)
+  WORD icoId[7] = { IDI_CURSOR,IDI_LINE,IDI_POLYLINE,IDI_BEZIER,IDI_CIRCLE,IDI_ELLIPTIC,IDI_RECTANGLE, };
+  int iIcon[7];
+  for(int i = 0; i < 7; i++)
   {
     HICON hicon = (HICON)LoadIcon(m_hIns, MAKEINTRESOURCE(icoId[i]));
     iIcon[i] = ImageList_AddIcon(m_imgList, hicon);
@@ -44,15 +44,16 @@ void ToolBar::init()
 
   SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_imgList);
 
-  TBBUTTON tbb[7] =
+  TBBUTTON tbb[8] =
   {
     { MAKELONG(iIcon[0], 0), BT_EDITMODE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
     { 0, BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL},
     { MAKELONG(iIcon[1], 0), BT_LINE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
     { MAKELONG(iIcon[2], 0), BT_POLYLINE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
     { MAKELONG(iIcon[3], 0), BT_BEZIER, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[4], 0), BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[5], 0), BT_ELLIPTIC, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL}
+    { MAKELONG(iIcon[4], 0), BT_CIRCLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[5], 0), BT_ELLIPTIC, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[6], 0), BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL}
   };
   
   SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);   //计算工具栏大小

@@ -18,6 +18,9 @@ public:
   virtual void drawHandler(HDC hdc, double xoff, double yoff, double scale);
   virtual ControlHandler* getHandlerByPos(const PointF& pos);
 private:
+  bool isPointInLine(const PointF &pos,int id);
+  bool isRectInLine(const RectF& rect, int id);
+private:
   Vector<PointF> m_aptf;
 
 

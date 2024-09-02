@@ -4,7 +4,8 @@
 #include "GraphItemShape.h"
 #include "GraphEditor_def.h"
 
-class GraphItemRectangle : public GraphItemShape
+class GraphItemRectangle : 
+    public GraphItemShape
 {
 public: 
   GraphItemRectangle(PointF beginPos, PointF endPos);

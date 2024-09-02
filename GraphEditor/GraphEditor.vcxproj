@@ -132,6 +132,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
+    <ClInclude Include="GraphItemElliptic.h" />
     <ClInclude Include="GraphItemLine.h" />
     <ClInclude Include="GraphItemPolyBezier.h" />
     <ClInclude Include="GraphItemPolyline.h" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
+    <ClCompile Include="GraphItemElliptic.cpp" />
     <ClCompile Include="GraphItemLine.cpp" />
     <ClCompile Include="GraphItemPolyBezier.cpp" />
     <ClCompile Include="GraphItemPolyline.cpp" />
@@ -171,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico\Bezier.ico" />
+    <Image Include="ico\Circle.ico" />
     <Image Include="ico\Cursor.ico" />
     <Image Include="ico\Curve.ico" />
     <Image Include="ico\elliptic.ico" />

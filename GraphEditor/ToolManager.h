@@ -9,8 +9,9 @@ enum ToolType{
   DRAW_LINE,
   DRAW_POLYLINE,
   DRAW_BEZIER,
+  DRAW_CIRCLE,
+  DRAW_ELLIPTIC,
   DRAW_RECTANGLE,
-  DEAW_ELLIPTIC
 };
 
 class ToolManager
