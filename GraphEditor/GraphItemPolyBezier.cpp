@@ -1,8 +1,8 @@
 #include "GraphItemPolyBezier.h"
 
-GraphItemPolyBezier::GraphItemPolyBezier(const PointF& m_startPos)
+GraphItemPolyBezier::GraphItemPolyBezier()
 {
-  addPos(m_startPos);
+
 }
 
 GraphItemPolyBezier::~GraphItemPolyBezier()
@@ -14,16 +14,16 @@ void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
 {
   if(m_aptf.size() < 4) return;
 
-  POINT *apt = new POINT[m_aptf.size()];
+  POINT *apt = new POINT[m_aptf.size()-2];
   if(apt == nullptr) return;
 
-  for(int i = 0; i < m_aptf.size(); i++)
+  for(int i = 1; i < m_aptf.size()-1; i++)
   {
-    apt[i].x = (m_aptf[i].x - xoff + 0.5);
-    apt[i].y = (m_aptf[i].y - yoff + 0.5);
+    apt[i-1].x = (m_aptf[i].x - xoff + 0.5);
+    apt[i-1].y = (m_aptf[i].y - yoff + 0.5);
   }
 
-  PolyBezier(hdc, apt, m_aptf.size());
+  PolyBezier(hdc, apt, m_aptf.size() - 2);
 
   delete[] apt;
 }
@@ -40,7 +40,7 @@ void GraphItemPolyBezier::move(double dx, double dy)
 
 bool GraphItemPolyBezier::isPointUpShape(const PointF& pos)
 {
-  for(int i = 0; i + 3 < m_aptf.size(); i += 3)
+  for(int i = 1; i + 3 < m_aptf.size(); i += 3)
   {
     if(isPointInLine(pos, i)) return true;
   }
@@ -49,13 +49,13 @@ bool GraphItemPolyBezier::isPointUpShape(const PointF& pos)
 
 bool GraphItemPolyBezier::isRectCrossShape(const RectF& rectf)
 {
-  for(int i = 0; i < m_aptf.size(); i+=3)
+  for(int i = 1; i < m_aptf.size(); i+=3)
   {
     if(rectf.isPointIn(m_aptf[i]))
       return true;
   }
 
-  for(int i = 0; i+3 < m_aptf.size(); i += 3)
+  for(int i = 1; i+3 < m_aptf.size(); i += 3)
   {
     if(isRectInLine(rectf,i))
       return true;
@@ -69,12 +69,12 @@ bool GraphItemPolyBezier::shapeResize(double dx, double dy, ControlHandler* hand
   int id = handler->getId();
   if(handler->getOwnerShape() != this) return false;
 
-  if(id % 3 == 0) // 说明移动的是端点
+  if(id % 3 == 1) // 说明移动的是端点
   {
     m_aptf[id].x += dx;
     m_aptf[id].y += dy;
     m_ctrHandlers[id]->setPos(m_aptf[id]);
-    if(id - 1 >= 0)
+    if(id - 1 > 0)
     {
       m_aptf[id - 1].x += dx;
       m_aptf[id - 1].y += dy;
@@ -109,22 +109,22 @@ void GraphItemPolyBezier::addPos(const PointF& pos)
 
 void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double scale)
 {
-  for(int i = 0; i < m_ctrHandlers.size(); i++)
+  for(int i = 1; i < m_ctrHandlers.size(); i++)
   {
-    if(i % 3 == 0) //端点控制点都要绘制
+    if(i % 3 == 1) //端点控制点都要绘制
       m_ctrHandlers[i]->draw(hdc, xoff, yoff, 12 * scale);
   }
 
   if(m_selectHandler) // 若有选中的控制点
   {
     int id = m_selectHandler->getId();
-    if(id % 3 == 1) id--;
-    else if(id % 3 == 2) id++; // 转换为端点id
+    if(id % 3 == 0) id++;
+    else if(id % 3 == 2) id--; // 转换为端点id
 
     HPEN blueDashPen = CreatePen(PS_DASH, 1, RGB(0, 0, 255));
     HPEN oldPen = (HPEN)SelectObject(hdc, blueDashPen);
 
-    if(id - 1 >= 0)
+    if(id - 1 > 0)
     {
       m_ctrHandlers[id - 1]->draw(hdc, xoff, yoff, 12 * scale);
       PointF posA = m_aptf[id - 1];
@@ -136,7 +136,7 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
       LineTo(hdc, posB.x, posB.y);
     }
 
-    if(id + 1 < m_ctrHandlers.size())
+    if(id + 1 < m_ctrHandlers.size()-1)
     {
       m_ctrHandlers[id + 1]->draw(hdc, xoff, yoff, 12 * scale);
       PointF posA = m_aptf[id + 1];
@@ -164,14 +164,14 @@ ControlHandler* GraphItemPolyBezier::getHandlerByPos(const PointF& pos)
   if(m_selectHandler)
   {
     int id = m_selectHandler->getId();
-    if(id % 3 == 1) id--;
-    else if(id % 3 == 2) id++; // 转换为端点id
-    if(id - 1 >= 0)
+    if(id % 3 == 0) id ++;
+    else if(id % 3 == 2) id--; // 转换为端点id
+    if(id - 1 > 0)
     {
       if(m_ctrHandlers[id - 1]->isPointInHandler(pos))
         return m_ctrHandlers[id - 1];
     }
-    if(id + 1 < m_ctrHandlers.size())
+    if(id + 1 < m_ctrHandlers.size()-1)
     {
       if(m_ctrHandlers[id + 1]->isPointInHandler(pos))
         return m_ctrHandlers[id + 1];

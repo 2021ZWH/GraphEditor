@@ -8,6 +8,7 @@
 #include "GraphItemLine.h"
 #include "GraphItemPolyline.h"
 #include "GraphItemPolyBezier.h"
+#include "GraphItemCircle.h"
 #include "GraphItemElliptic.h"
 #include "Vector.h"
 #include "SelectShapeManager.h"

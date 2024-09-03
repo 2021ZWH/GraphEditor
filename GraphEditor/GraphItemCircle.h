@@ -1,14 +1,13 @@
-#ifndef GRAPH_ITEM_ELLIPTIC_H
-#define GRAPH_ITEM_ELLIPTIC_H
+#ifndef GRAPH_ITEM_CIRCLE_H
+#define GRAPH_ITEM_CIRCLE_H
 
 #include "GraphItemShape.h"
-
-class GraphItemElliptic :
+class GraphItemCircle :
     public GraphItemShape
 {
 public:
-  GraphItemElliptic(const PointF &beginPos, const PointF &endPos);
-  ~GraphItemElliptic();
+  GraphItemCircle(const PointF &beginPos,const PointF &endPos);
+  ~GraphItemCircle();
   void drawShape(HDC hdc, double xoff, double yoff) override;
   void move(double dx, double dy) override;
   bool isPointUpShape(const PointF& pos) override;
@@ -17,8 +16,9 @@ public:
 private:
   void updateHandlers();
 private:
-  Vector<PointF> m_aptF;
+  Vector<PointF>m_aptF;
 
 };
 
-#endif // GRAPH_ITEM_ELLIPTIC_H
+#endif // GRAPH_ITEM_CIRCLE_H
+

@@ -7,7 +7,7 @@ class GraphItemPolyBezier :
     public GraphItemShape
 {
 public:
-  GraphItemPolyBezier(const PointF &m_startPos);
+  GraphItemPolyBezier();
   ~GraphItemPolyBezier();
   void drawShape(HDC hdc, double xoff, double yoff) override;
   void move(double dx, double dy) override;

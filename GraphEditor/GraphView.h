@@ -45,7 +45,7 @@ private:
 
   PointF m_startPos;
   PointF m_endPos;
-  PointF m_aptF[4];
+  PointF m_aptF[5];
   bool isDrawing = false;
 
 };

@@ -126,6 +126,9 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
   case BT_BEZIER:
     m_pGView->setMode(ToolType::DRAW_BEZIER);
     break;
+  case BT_CIRCLE:
+    m_pGView->setMode(ToolType::DRAW_CIRCLE);
+    break;
   case BT_ELLIPTIC:
     m_pGView->setMode(ToolType::DRAW_ELLIPTIC);
     break;

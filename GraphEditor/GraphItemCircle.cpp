@@ -1,6 +1,6 @@
-#include "GraphItemElliptic.h"
+#include "GraphItemCircle.h"
 
-GraphItemElliptic::GraphItemElliptic(const PointF &beginPos, const PointF &endPos)
+GraphItemCircle::GraphItemCircle(const PointF &beginPos, const PointF &endPos)
 {
   m_aptF.resize(4);
   m_aptF[0] = { beginPos.x,endPos.y };
@@ -21,12 +21,12 @@ GraphItemElliptic::GraphItemElliptic(const PointF &beginPos, const PointF &endPo
   updateHandlers();
 }
 
-GraphItemElliptic::~GraphItemElliptic()
+GraphItemCircle::~GraphItemCircle()
 {
   GraphItemShape::clearCtrHandler();
 }
 
-void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemCircle::drawShape(HDC hdc, double xoff, double yoff)
 {
   int left = m_aptF[0].x - xoff;
   int right = m_aptF[3].x - xoff;
@@ -35,11 +35,11 @@ void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
   HBRUSH hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
   HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
   Ellipse(hdc, left, top, right, bottom);
-  SelectObject(hdc,oldBru);
+  SelectObject(hdc, oldBru);
 
 }
 
-void GraphItemElliptic::move(double dx, double dy)
+void GraphItemCircle::move(double dx, double dy)
 {
   for(int i = 0; i < m_aptF.size(); i++)
     m_aptF[i].x += dx, m_aptF[i].y += dy;
@@ -47,7 +47,7 @@ void GraphItemElliptic::move(double dx, double dy)
   updateHandlers();
 }
 
-bool GraphItemElliptic::isPointUpShape(const PointF& pos)
+bool GraphItemCircle::isPointUpShape(const PointF& pos)
 {
   double a = fabs((m_aptF[3].x - m_aptF[0].x) / 2); // ³¤Öá³¤
   double b = fabs((m_aptF[1].y - m_aptF[0].y) / 2); // ¶ÌÖá³¤
@@ -55,28 +55,30 @@ bool GraphItemElliptic::isPointUpShape(const PointF& pos)
   p0.x = (m_aptF[0].x + m_aptF[3].x) / 2;
   p0.y = (m_aptF[1].y + m_aptF[0].y) / 2;
 
-  double val = pow(pos.x - p0.x, 2) / pow(a, 2) + pow(pos.y - p0.y,2) / pow(b, 2);
+  double val = pow(pos.x - p0.x, 2) / pow(a, 2) + pow(pos.y - p0.y, 2) / pow(b, 2);
   if(fabs(val - 1) <= 0.05) return true;
 
   return false;
 }
 
-bool GraphItemElliptic::isRectCrossShape(const RectF& rectf)
+bool GraphItemCircle::isRectCrossShape(const RectF& rectf)
 {
   return true;
 }
 
-bool GraphItemElliptic::shapeResize(double dx, double dy, ControlHandler* handler)
+bool GraphItemCircle::shapeResize(double dx, double dy, ControlHandler* handler)
 {
   if(handler->getOwnerShape() != this) return false;
   int id = handler->getId();
+  if(fabs(dx) > fabs(dy)) dy = dx;
+  else dx = dy;
   switch(id)
   {
   case 0:
     m_aptF[0].x += dx;
-    m_aptF[0].y += dy;
+    m_aptF[0].y -= dy;
     m_aptF[1].x += dx;
-    m_aptF[3].y += dy;
+    m_aptF[3].y -= dy;
     break;
   case 1:
     m_aptF[0].x += dx;
@@ -113,12 +115,12 @@ bool GraphItemElliptic::shapeResize(double dx, double dy, ControlHandler* handle
     m_aptF[3].y += dy;
     break;
   }
-  
+
   updateHandlers();
   return true;
 }
 
-void GraphItemElliptic::updateHandlers()
+void GraphItemCircle::updateHandlers()
 {
   for(int i = 0; i < 8; i++)
   {

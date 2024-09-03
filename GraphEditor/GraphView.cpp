@@ -363,17 +363,15 @@ void GraphView::startDraw(const POINT& pos)
     {
       if(!m_pToolMger->isValidShape())
       {
-        GraphItemShape* pItemShape = new GraphItemPolyBezier(mapToScene(pos));
+        GraphItemShape* pItemShape = new GraphItemPolyBezier();
         m_pToolMger->setShape(pItemShape);
         m_pGhMger->addShape(pItemShape);
-        m_aptF[0] = m_aptF[1] = m_aptF[2] = m_aptF[3] = mapToScene(pos);
+        m_aptF[0] = m_aptF[1] = m_aptF[2] = m_aptF[3] = m_aptF[4] = mapToScene(pos);
       }
       InvalidateRect(m_hWnd, NULL, false);
       break;
     }
   }
-
-  
 }
 
 void GraphView::drawNext(const POINT& pos)
@@ -391,17 +389,17 @@ void GraphView::drawNext(const POINT& pos)
     case DRAW_BEZIER:
     {
       if(m_pToolMger->isValidShape())
-        m_pToolMger->updateShape(m_aptF[1], m_aptF[2], m_aptF[3]);
+        m_pToolMger->updateShape(m_aptF[2], m_aptF[3], m_aptF[4]);
       m_aptF[0] = m_aptF[3];
+      m_aptF[1] = m_aptF[4];
+      m_aptF[2] = m_aptF[3];
      /* m_aptF[1].x = m_aptF[3].x * 2 - m_aptF[2].x;
       m_aptF[1].y = m_aptF[3].y * 2 - m_aptF[2].y;*/
-      m_aptF[1]=m_aptF[2] = m_aptF[3];
+     // m_aptF[1]=m_aptF[2] = m_aptF[3];
       InvalidateRect(m_hWnd, NULL, false);
       break;
     }
   }
-  
-  
 }
 
 void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
@@ -452,9 +450,11 @@ void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
         {
           m_aptF[2].x = 2 * m_aptF[3].x - posF.x;
           m_aptF[2].y = 2 * m_aptF[3].y - posF.y;
+          m_aptF[4] = posF;
         }
         else
         {
+          m_aptF[2] = m_aptF[4] = posF;
           m_aptF[3] = posF;
         }
         m_pToolMger->drawRubberBand(hdc, mapToView(m_aptF[0]), mapToView(m_aptF[1]), mapToView(m_aptF[2]), mapToView(m_aptF[3]));
@@ -474,42 +474,51 @@ void GraphView::endDraw(const POINT& pos)
   GraphItemShape* pItemShape = nullptr;
   switch(m_pToolMger->getToolType())
   {
-  case EDIT_MOUSE:
-    m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
-    break;
+    case EDIT_MOUSE:
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      break;
 
-  case DRAW_LINE:
-    m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
-    pItemShape = new GraphItemLine(m_startPos, m_endPos);
-    break;
+    case DRAW_LINE:
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      pItemShape = new GraphItemLine(m_startPos, m_endPos);
+      break;
 
-  case DRAW_ELLIPTIC:
-    m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
-    pItemShape = new GraphItemElliptic(m_startPos, m_endPos);
-    break;
-
-  case DRAW_RECTANGLE:
-    m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
-    pItemShape = new GraphItemRectangle(m_startPos, m_endPos);
-    break;
-
-  case DRAW_POLYLINE:
-    if(m_pToolMger->isValidShape())
+    case DRAW_CIRCLE:
     {
-      m_pToolMger->updateShape(m_startPos, mapToScene(pos));
-      m_pToolMger->setShape(nullptr);
-      InvalidateRect(m_hWnd, NULL, false);
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      double w = max(m_endPos.x - m_startPos.x, m_endPos.y - m_startPos.y);
+      pItemShape = new GraphItemCircle(m_startPos, {m_startPos.x+w,m_startPos.y+w});
+      break;
     }
-    break;
-  case DRAW_BEZIER:
-    if(m_pToolMger->isValidShape())
-    {
-      m_aptF[3] = mapToScene(pos);
-      m_pToolMger->updateShape(m_aptF[1], m_aptF[2], m_aptF[3]);
-      m_pToolMger->setShape(nullptr);
-      InvalidateRect(m_hWnd, NULL, false);
-    }
-    break;
+
+    case DRAW_ELLIPTIC:
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      pItemShape = new GraphItemElliptic(m_startPos, m_endPos);
+      break;
+
+    case DRAW_RECTANGLE:
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      pItemShape = new GraphItemRectangle(m_startPos, m_endPos);
+      break;
+
+    case DRAW_POLYLINE:
+      if(m_pToolMger->isValidShape())
+      {
+        m_pToolMger->updateShape(m_startPos, mapToScene(pos));
+        m_pToolMger->setShape(nullptr);
+        InvalidateRect(m_hWnd, NULL, false);
+      }
+      break;
+
+    case DRAW_BEZIER:
+      if(m_pToolMger->isValidShape())
+      {
+        m_aptF[3] = mapToScene(pos);
+        m_pToolMger->updateShape(m_aptF[2], m_aptF[3], m_aptF[4]);
+        m_pToolMger->setShape(nullptr);
+        InvalidateRect(m_hWnd, NULL, false);
+      }
+      break;
   }
 
   if(pItemShape)

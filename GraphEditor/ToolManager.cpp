@@ -75,6 +75,12 @@ void ToolManager::drawRubberBand(HDC hdc, const POINT& pos1, const POINT& pos2, 
       delete[] apt;
       break;
     }
+    case DRAW_CIRCLE:
+    {
+      int w = max(pos2.x - pos1.x, pos2.y - pos1.y);
+      Ellipse(hdc, pos1.x, pos1.y, pos1.x + w, pos1.y + w);
+      break;
+    }
     case DRAW_ELLIPTIC:
     {
       Ellipse(hdc, pos1.x, pos1.y, pos2.x, pos2.y);
