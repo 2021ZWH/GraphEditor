@@ -48,3 +48,33 @@ void GraphItemShape::resetSelect()
 {
   m_selectHandler = nullptr;
 }
+
+void GraphItemShape::setLineWidth(UINT width)
+{
+  if(width >= 1) m_lineWidth = width;
+}
+
+void GraphItemShape::setLineColor(COLORREF color)
+{
+  m_lineColor = color;
+}
+
+void GraphItemShape::setFillColor(COLORREF color)
+{
+  m_fillColor = color;
+}
+
+UINT GraphItemShape::getLineWidth() const
+{
+  return m_lineWidth;
+}
+
+COLORREF GraphItemShape::getLineColor() const
+{
+  return m_lineColor;
+}
+
+COLORREF GraphItemShape::getFillColor() const
+{
+  return m_fillColor;
+}

@@ -55,6 +55,12 @@ struct SegmentF
     PointF Q1 = other.posA;
     PointF Q2 = other.posB;
 
+    if(max(Q1.x, Q2.x) < min(posA.x, posB.x) ||  
+      max(posA.x, posB.x) < min(Q1.x, Q2.x) ||
+      max(Q1.y, Q2.y) < min(posA.y, posB.y) ||
+      max(posA.y, posB.y) < min(Q1.y, Q2.y)) // 快速跨立实验
+      return false;
+
     if(((Q1.x - posA.x) * (Q1.y - Q2.y) - (Q1.y - posA.y) * (Q1.x - Q2.x)) *
        ((Q1.x - posB.x) * (Q1.y - Q2.y) - (Q1.y - posB.y) * (Q1.x - Q2.x)) < 0)
       return true;
@@ -63,7 +69,7 @@ struct SegmentF
        ((posA.x - Q2.x) * (posA.y - posB.y) - (posA.y - Q2.y) * (posA.x - posB.x)) < 0)
       return true;
 
-    return true;
+    return false;
   }
 
 };

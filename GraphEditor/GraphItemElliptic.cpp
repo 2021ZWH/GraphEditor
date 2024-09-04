@@ -32,11 +32,22 @@ void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
   int right = m_aptF[3].x - xoff;
   int top = m_aptF[1].y - yoff;
   int bottom = m_aptF[3].y - yoff;
-  HBRUSH hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
-  HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
-  Ellipse(hdc, left, top, right, bottom);
-  SelectObject(hdc,oldBru);
 
+  HBRUSH hbru;
+  if(m_fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
+  else hbru = CreateSolidBrush(m_fillColor);
+
+  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+  HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
+
+  Ellipse(hdc, left, top, right, bottom);
+
+  SelectObject(hdc, oldBru);
+  SelectObject(hdc, hpen);
+
+  if(!m_fTransparent) DeleteObject(hbru);
+  DeleteObject(hpen);
 }
 
 void GraphItemElliptic::move(double dx, double dy)
@@ -63,6 +74,10 @@ bool GraphItemElliptic::isPointUpShape(const PointF& pos)
 
 bool GraphItemElliptic::isRectCrossShape(const RectF& rectf)
 {
+  RectF rect = { m_aptF[1].x,m_aptF[1].y,m_aptF[3].x,m_aptF[3].y };
+
+  if(!rect.isRectIntersect(rectf)) return false; // 判断包围盒相不相交
+
   return true;
 }
 

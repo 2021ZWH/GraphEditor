@@ -20,12 +20,18 @@ void GraphItemLine::drawShape(HDC hdc, double xoff, double yoff)
   POINT pos;
   double sx = m_posA.x - xoff;
   double sy = m_posA.y - yoff;
-  MoveToEx(hdc, sx, sy, &pos);
-
   double ex = m_posB.x - xoff;
   double ey = m_posB.y - yoff;
+
+  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+  
+  MoveToEx(hdc, sx, sy, &pos);
   LineTo(hdc, ex, ey);
+
   MoveToEx(hdc, pos.x, pos.y,NULL);
+  SelectObject(hdc, oldPen);
+  DeleteObject(hpen);
 }
 
 void GraphItemLine::move(double dx, double dy)

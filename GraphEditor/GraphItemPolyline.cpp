@@ -12,6 +12,9 @@ GraphItemPolyline::~GraphItemPolyline()
 
 void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)
 {
+  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+
   for(int i = 0; i < m_linePos.size() - 1; i++)
   {
     PointF startPos = m_linePos[i];
@@ -22,6 +25,9 @@ void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)
     endPos.y -= yoff;
     drawSingleLine(hdc, startPos, endPos);
   }
+
+  SelectObject(hdc, oldPen);
+  DeleteObject(hpen);
 }
 
 void GraphItemPolyline::move(double dx, double dy)

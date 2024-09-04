@@ -22,12 +22,23 @@ public:
   virtual void addPos(const PointF& pos);
   virtual void SetSelectHandler(ControlHandler* handler);
   virtual void resetSelect();
+
+  virtual void setLineWidth(UINT width);
+  virtual void setLineColor(COLORREF color);
+  virtual void setFillColor(COLORREF color);
+  virtual UINT getLineWidth() const;
+  virtual COLORREF getLineColor() const;
+  virtual COLORREF getFillColor() const;
 protected:
   virtual void clearCtrHandler();
 protected:
   Vector<ControlHandler*> m_ctrHandlers;
   ControlHandler* m_selectHandler = nullptr;
-
+  UINT m_lineWidth = 1;
+  COLORREF m_lineColor = BGR_BLACK;
+  COLORREF m_fillColor = BGR_WHITE;
+  bool m_fTransparent = true;
+  
 };
 
 #endif // GRAPH_ITEM_SHAPE_H

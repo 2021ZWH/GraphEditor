@@ -475,9 +475,18 @@ void GraphView::endDraw(const POINT& pos)
   switch(m_pToolMger->getToolType())
   {
     case EDIT_MOUSE:
+    {
       m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
-      break;
+      RectF rectf;
+      rectf.left = min(m_startPos.x, m_endPos.x);
+      rectf.right = max(m_startPos.x, m_endPos.x);
+      rectf.top = min(m_startPos.y, m_endPos.y);
+      rectf.bottom = max(m_startPos.y, m_endPos.y);
 
+      if(rectf.right - rectf.left > 1 && rectf.bottom - rectf.top > 1)
+        m_pGhMger->setSelectShape(rectf);
+      break;
+    }
     case DRAW_LINE:
       m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
       pItemShape = new GraphItemLine(m_startPos, m_endPos);

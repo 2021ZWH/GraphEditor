@@ -19,8 +19,7 @@ public:
 private:
   void updateCtrHandler();
 private:
-  RectF m_rectf;
-  int lineW = 1;
+  Vector<PointF> m_aptF;
 };
 
-#endif// GRAPH_ITEM_RECTANGLE_H
+#endif // GRAPH_ITEM_RECTANGLE_H

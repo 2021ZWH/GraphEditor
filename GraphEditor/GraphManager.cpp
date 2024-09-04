@@ -78,10 +78,37 @@ void GraphManager::addShape(GraphItemShape* shape)
   m_selectMger.addShape(shape);
 }
 
+void GraphManager::setSelectShape(const PointF& pos)
+{
+  if(setSelectShapeByPos(pos))
+  {
+    freshView();
+  }
+}
+
+void GraphManager::setSelectShape(const RectF& rectf)
+{
+  if(setSelectShapeByRect(rectf))
+  {
+    freshView();
+  }
+}
+
 void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
 {
   bool freshWnd = false;
-
+  bool flag = false;
+  m_mouseBeginPos = scenePos;
+  Vector<GraphItemShape*> vec = m_selectMger.getShape();
+  for(int i = 0; i < vec.size(); i++)
+  {
+    if(vec[i]->isPointUpShape(scenePos))
+    {
+      flag = true;
+      break;
+    }
+  }
+  if(flag) return;
   if(!canSelect)
   {
     m_selectMger.setHandler(nullptr);
@@ -91,7 +118,7 @@ void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
   }
 
   m_selectMger.setHandler(nullptr); // 判断是否选中控制点
-  Vector<GraphItemShape*> vec = m_selectMger.getShape();
+ // Vector<GraphItemShape*> vec = m_selectMger.getShape();
   for(int i = 0; i < vec.size(); i++)
   {
     ControlHandler* handler = vec[i]->getHandlerByPos(scenePos);
@@ -118,7 +145,7 @@ void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
     }
   }
 
-  m_mouseBeginPos = scenePos;
+  
  
   if(freshWnd) InvalidateRect(m_hWnd, NULL, false);
 }
@@ -158,4 +185,46 @@ void GraphManager::onMouseMove(bool fLButtonDown, const PointF& scenePos)
 void GraphManager::onMouseLButtonUp(const PointF& scenePos)
 {
   m_selectMger.setHandler(nullptr); // 控制点操作结束
+}
+
+void GraphManager::freshView()
+{
+  InvalidateRect(m_hWnd, NULL, false);
+}
+
+bool GraphManager::setSelectShapeByPos(const PointF& pos)
+{
+  bool ret = false; // 判断选中图形是否发生改变
+  if(isSelect()) ret = true;
+  m_selectMger.clearSelect();
+
+  for(int i = 0; i < m_shapeVec.size(); i++)  // 若选中图形，添加
+  {
+    if(m_shapeVec[i]->isPointUpShape(pos))
+    {
+      m_selectMger.addShape(m_shapeVec[i]);
+      ret = true;
+      break;
+    }
+  }
+
+  return ret;
+}
+
+bool GraphManager::setSelectShapeByRect(const RectF& rectf)
+{
+  bool ret = false; // 判断选中图形是否发生改变
+  if(isSelect()) ret = true;
+  m_selectMger.clearSelect();
+
+  for(int i = 0; i < m_shapeVec.size(); i++)
+  {
+    if(m_shapeVec[i]->isRectCrossShape(rectf))
+    {
+      m_selectMger.addShape(m_shapeVec[i]);
+      ret = true;
+    }
+  }
+
+  return ret;
 }

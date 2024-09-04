@@ -2,53 +2,63 @@
 
 GraphItemRectangle::GraphItemRectangle(PointF beginPos, PointF endPos)
 {
-  m_rectf.left = beginPos.x;
-  m_rectf.top = beginPos.y;
-  m_rectf.right = endPos.x;
-  m_rectf.bottom = endPos.y;
+  m_aptF.resize(4);
+  m_aptF[0] = { beginPos.x,endPos.y };
+  m_aptF[1] = beginPos;
+  m_aptF[2] = { endPos.x,beginPos.y };
+  m_aptF[3] = endPos;
+
   m_ctrHandlers.resize(8);
-  m_ctrHandlers[0] = new ControlHandler(this,HandlerType::HT_WEST, 0);
-  m_ctrHandlers[1] = new ControlHandler(this,HandlerType::HT_NW,1);
-  m_ctrHandlers[2] = new ControlHandler(this,HandlerType::HT_NORTH, 2);
-  m_ctrHandlers[3] = new ControlHandler(this,HandlerType::HT_NE, 3);
-  m_ctrHandlers[4] = new ControlHandler(this,HandlerType::HT_EAST, 4);
-  m_ctrHandlers[5] = new ControlHandler(this,HandlerType::HT_SE, 5);
-  m_ctrHandlers[6] = new ControlHandler(this,HandlerType::HT_SOUTH, 6);
-  m_ctrHandlers[7] = new ControlHandler(this,HandlerType::HT_SW ,7);
+  m_ctrHandlers[0] = new ControlHandler(this,HandlerType::HT_SW, 0);
+  m_ctrHandlers[1] = new ControlHandler(this,HandlerType::HT_WEST,1);
+  m_ctrHandlers[2] = new ControlHandler(this,HandlerType::HT_NW, 2);
+  m_ctrHandlers[3] = new ControlHandler(this,HandlerType::HT_NORTH, 3);
+  m_ctrHandlers[4] = new ControlHandler(this,HandlerType::HT_NE, 4);
+  m_ctrHandlers[5] = new ControlHandler(this,HandlerType::HT_EAST, 5);
+  m_ctrHandlers[6] = new ControlHandler(this,HandlerType::HT_SE, 6);
+  m_ctrHandlers[7] = new ControlHandler(this,HandlerType::HT_SOUTH,7);
 
   updateCtrHandler();
-
 }
 
 GraphItemRectangle::~GraphItemRectangle()
 {
-  for(int i = 0; i < m_ctrHandlers.size(); i++)
-  {
-    delete m_ctrHandlers[i];
-    m_ctrHandlers[i] = nullptr;
-  }
-
+  GraphItemShape::clearCtrHandler();
 }
 
 void GraphItemRectangle::drawShape(HDC hdc,double xoff, double yoff)
 {
-  int left = m_rectf.left - xoff;
-  int right = m_rectf.right - xoff;
-  int top = m_rectf.top - yoff;
-  int bottom = m_rectf.bottom - yoff;
+  RectF rect;
+  rect.left = min(m_aptF[0].x, m_aptF[2].x) - xoff;
+  rect.right = max(m_aptF[0].x, m_aptF[2].x) - xoff;
+  rect.top = min(m_aptF[0].y, m_aptF[2].y) - yoff;
+  rect.bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
   
-  HBRUSH hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
-  HBRUSH hOldBru = (HBRUSH)SelectObject(hdc, hbru);
-  Rectangle(hdc,left, top, right, bottom);
-  SelectObject(hdc, hOldBru);
+  HBRUSH hbru;
+  if(m_fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
+  else hbru = CreateSolidBrush(m_fillColor);
+
+  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+  HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
+
+  Rectangle(hdc,rect.left, rect.top, rect.right, rect.bottom);
+  
+  SelectObject(hdc, oldBru);
+  SelectObject(hdc, hpen);
+
+  if(!m_fTransparent) DeleteObject(hbru);
+  DeleteObject(hpen);
 }
 
 void GraphItemRectangle::move(double dx, double dy)
 {
-  m_rectf.left += dx;
-  m_rectf.right += dx;
-  m_rectf.top += dy;
-  m_rectf.bottom += dy;
+ 
+  for(int i = 0; i < m_aptF.size(); i++)
+  {
+    m_aptF[i].x += dx;
+    m_aptF[i].y += dy;
+  }
 
   for(int i = 0; i < m_ctrHandlers.size(); i++)
   {
@@ -61,15 +71,20 @@ bool GraphItemRectangle::isPointUpShape(const PointF& pos)
   double x = pos.x;
   double y = pos.y;
 
+  RectF rect;
+  rect.left = min(m_aptF[0].x, m_aptF[2].x);
+  rect.right = max(m_aptF[0].x, m_aptF[2].x);
+  rect.top = min(m_aptF[0].y, m_aptF[2].y);
+  rect.bottom = max(m_aptF[0].y, m_aptF[2].y);
   
-  if(fabs(m_rectf.left - x) < 2 || fabs(m_rectf.right - x) < 2)
+  if(fabs(rect.left - x) < 2 || fabs(rect.right - x) < 2)
   {
-    return y <= m_rectf.bottom && y >= m_rectf.top;
+    return y <= rect.bottom && y >= rect.top;
   }
 
-  if(fabs(m_rectf.bottom - y) < 2 || fabs(m_rectf.top - y) < 2)
+  if(fabs(rect.bottom - y) < 2 || fabs(rect.top - y) < 2)
   {
-    return x <= m_rectf.right && x >= m_rectf.left;
+    return x <= rect.right && x >= rect.left;
   }
 
   return false;
@@ -77,88 +92,78 @@ bool GraphItemRectangle::isPointUpShape(const PointF& pos)
 
 bool GraphItemRectangle::isRectCrossShape(const RectF& rectf)
 {
-  double w1 = rectf.right - m_rectf.left;
-  double h1 = m_rectf.bottom - m_rectf.top;
-  double w2 = rectf.right - rectf.left;
-  double h2 = rectf.bottom - rectf.top;
-  double w = fabs((m_rectf.left + m_rectf.right) / 2 - (rectf.left + rectf.right) / 2);
-  double h = fabs((m_rectf.top + m_rectf.bottom) / 2 - (rectf.top + rectf.bottom) / 2);
+  RectF rect;
+  rect.left = min(m_aptF[0].x, m_aptF[2].x);
+  rect.right = max(m_aptF[0].x, m_aptF[2].x);
+  rect.top = min(m_aptF[0].y, m_aptF[2].y);
+  rect.bottom = max(m_aptF[0].y, m_aptF[2].y);
+  bool ret = rectf.isRectIntersect(rect);
 
-  if(w < (w1 + w2) / 2 && h < (h1 + h2) / 2)
-    return true;
-
-  return false;
+  return ret;
 }
 
 bool GraphItemRectangle::shapeResize(double dx,double dy, ControlHandler* handler)
 {
+  if(handler->getOwnerShape() != this) return false;
   int id = handler->getId();
-  if(m_ctrHandlers.size() <= id || id < 0) return false;
-  if(m_ctrHandlers[id] != handler) return false;
-
   switch(id)
   {
-    case 0: // 左边
-    {
-      m_rectf.left += dx;
-      break;
-    }
-    case 1: // 左上角点
-    {
-      m_rectf.left += dx;
-      m_rectf.top += dy;
-      break;
-    }
-    case 2: // 上边
-    {
-      m_rectf.top += dy;
-      break;
-    }
-    case 3: // 右上角点
-    {
-      m_rectf.right += dx;
-      m_rectf.top += dy;
-      break;
-    }
-    case 4: // 右边
-    {
-      m_rectf.right += dx;
-      break;
-    }
-    case 5: // 右下角点
-    {
-      m_rectf.right += dx;
-      m_rectf.bottom += dy;
-      break;
-    }
-    case 6: // 下边
-    {
-      m_rectf.bottom += dy;
-      break;
-    }
-    case 7: // 左下角点
-    {
-      m_rectf.left += dx;
-      m_rectf.bottom += dy;
-      break;
-    }
+  case 0:
+    m_aptF[0].x += dx;
+    m_aptF[0].y += dy;
+    m_aptF[1].x += dx;
+    m_aptF[3].y += dy;
+    break;
+  case 1:
+    m_aptF[0].x += dx;
+    m_aptF[1].x += dx;
+    break;
+  case 2:
+    m_aptF[1].x += dx;
+    m_aptF[1].y += dy;
+    m_aptF[0].x += dx;
+    m_aptF[2].y += dy;
+    break;
+  case 3:
+    m_aptF[1].y += dy;
+    m_aptF[2].y += dy;
+    break;
+  case 4:
+    m_aptF[2].x += dx;
+    m_aptF[2].y += dy;
+    m_aptF[1].y += dy;
+    m_aptF[3].x += dx;
+    break;
+  case 5:
+    m_aptF[2].x += dx;
+    m_aptF[3].x += dx;
+    break;
+  case 6:
+    m_aptF[3].x += dx;
+    m_aptF[3].y += dy;
+    m_aptF[2].x += dx;
+    m_aptF[0].y += dy;
+    break;
+  case 7:
+    m_aptF[0].y += dy;
+    m_aptF[3].y += dy;
+    break;
   }
+
   updateCtrHandler();
   return true;
  }
 
 void GraphItemRectangle::updateCtrHandler()
 {
-  PointF beginPos = { m_rectf.left,m_rectf.top };
-  PointF endPos = { m_rectf.right,m_rectf.bottom };
-
-  m_ctrHandlers[0]->setPos({ beginPos.x,(endPos.y + beginPos.y) / 2 });
-  m_ctrHandlers[1]->setPos(beginPos);
-  m_ctrHandlers[2]->setPos({ (endPos.x + beginPos.x) / 2,beginPos.y });
-  m_ctrHandlers[3]->setPos({ endPos.x,beginPos.y });
-  m_ctrHandlers[4]->setPos({ endPos.x,(endPos.y + beginPos.y) / 2 });
-  m_ctrHandlers[5]->setPos(endPos);
-  m_ctrHandlers[6]->setPos({ (endPos.x + beginPos.x) / 2,endPos.y });
-  m_ctrHandlers[7]->setPos({ beginPos.x,endPos.y });
-
+  for(int i = 0; i < 8; i++)
+  {
+    if(i % 2 == 0) m_ctrHandlers[i]->setPos(m_aptF[i / 2]);
+    else
+    {
+      PointF posA = m_aptF[i / 2];
+      PointF posB = m_aptF[(i / 2 + 1) % 4];
+      m_ctrHandlers[i]->setPos({ (posA.x + posB.x) / 2,(posA.y + posB.y) / 2 });
+    }
+  }
 }

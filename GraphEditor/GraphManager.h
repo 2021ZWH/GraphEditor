@@ -27,12 +27,16 @@ public:
   bool isSelect() const;
 
   void addShape(GraphItemShape* shape);
+  void setSelectShape(const PointF& pos);
+  void setSelectShape(const RectF& rectf);
 
   void onMouseLButtonDown(const PointF& scenePos,bool canSelect);
   void onMouseMove(bool fLButtonDown, const PointF& scenePos);
   void onMouseLButtonUp(const PointF& scenePos);
 private:
- 
+  void freshView();
+  bool setSelectShapeByPos(const PointF& pos);
+  bool setSelectShapeByRect(const RectF& rectf);
 private:
   HWND m_hWnd;
   UINT m_width  = MAX_SCENE_WIDTH;

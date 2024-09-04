@@ -12,7 +12,7 @@ GraphItemPolyBezier::~GraphItemPolyBezier()
 
 void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
 {
-  if(m_aptf.size() < 4) return;
+  if(m_aptf.size() < 6) return;
 
   POINT *apt = new POINT[m_aptf.size()-2];
   if(apt == nullptr) return;
@@ -23,7 +23,13 @@ void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
     apt[i-1].y = (m_aptf[i].y - yoff + 0.5);
   }
 
+  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+
   PolyBezier(hdc, apt, m_aptf.size() - 2);
+
+  SelectObject(hdc, oldPen);
+  DeleteObject(hpen);
 
   delete[] apt;
 }
@@ -49,13 +55,13 @@ bool GraphItemPolyBezier::isPointUpShape(const PointF& pos)
 
 bool GraphItemPolyBezier::isRectCrossShape(const RectF& rectf)
 {
-  for(int i = 1; i < m_aptf.size(); i+=3)
+  for(int i = 1; i < m_aptf.size(); i += 3)
   {
     if(rectf.isPointIn(m_aptf[i]))
       return true;
   }
 
-  for(int i = 1; i+3 < m_aptf.size(); i += 3)
+  for(int i = 1; i + 3 < m_aptf.size(); i += 3)
   {
     if(isRectInLine(rectf,i))
       return true;
@@ -155,7 +161,7 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
 
 ControlHandler* GraphItemPolyBezier::getHandlerByPos(const PointF& pos)
 {
-  for(int i = 0; i < m_ctrHandlers.size(); i++)
+  for(int i = 1; i + 3 < m_ctrHandlers.size(); i += 3)
   {
     if(m_ctrHandlers[i]->isPointInHandler(pos)) 
       return m_ctrHandlers[i];
@@ -208,29 +214,24 @@ bool GraphItemPolyBezier::isRectInLine(const RectF& rect, int id)
   PointF p2 = m_aptf[id + 2];
   PointF p3 = m_aptf[id + 3];
 
-  PointF b;
-  bool status[4][2];
-  memset(status, 0, sizeof status);
-  for(int i = 0; i <= 100; i++) // 将每段曲线分成100个点，判断点是否在附近
+  PointF a, b;
+  for(int i = 0; i <= 100; i++) // 将每段曲线分成100个点，选相邻两点构成线段，判断线段是否与矩形相交
   {
-    double t = 1.0 / 100 * i;
+    double t = 0.01 * i;
     b.x = pow(1 - t, 3.0) * p0.x + 3 * t * pow(1 - t, 2.0) * p1.x + 3 * pow(t, 2) * (1 - t) * p2.x + pow(t, 3) * p3.x;
     b.y = pow(1 - t, 3.0) * p0.y + 3 * t * pow(1 - t, 2.0) * p1.y + 3 * pow(t, 2) * (1 - t) * p2.y + pow(t, 3) * p3.y;
+
+    if(i == 0)
+    {
+      a = b;
+      continue;
+    }
     
-    if(b.x < rect.left) status[0][0] = true;
-    else if(b.x > rect.left) status[0][1] = true;
+    SegmentF seg = { a,b };
+    if(rect.isSegmentIntersect(seg))
+      return true;
 
-    if(b.y < rect.top) status[1][0] = true;
-    else if(b.y > rect.top) status[1][1] = true;
-
-    if(b.x < rect.right) status[2][0] = true;
-    else if(b.x > rect.right) status[2][1] = true;
-
-    if(b.y < rect.bottom) status[3][0] = true;
-    else if(b.y > rect.bottom) status[3][1] = true;
-    
-    for(int i = 0; i < 4; i++)
-      if(status[i][0] && status[i][1]) return true;
+    a = b;
   }
   return false;
 }
