@@ -1,13 +1,36 @@
 #include "GraphItemPolyBezier.h"
+#include <stdio.h>
+#include <wchar.h>
 
 GraphItemPolyBezier::GraphItemPolyBezier()
 {
-
+  m_shapeType = SHAPE_POLYBEZIER;
 }
 
 GraphItemPolyBezier::~GraphItemPolyBezier()
 {
   GraphItemShape::clearCtrHandler();
+}
+
+Vector<TCHAR> GraphItemPolyBezier::toText()
+{
+  Vector<TCHAR> vec = GraphItemShape::toText();
+
+  TCHAR buffer[10000];
+  _itow_s(m_aptf.size(), buffer, 10);
+  for(int i = 0; i < lstrlen(buffer); i++)
+    vec.push_back(buffer[i]);
+  vec.push_back(' ');
+
+  for(int i = 0; i < m_aptf.size(); i++)
+  {
+    swprintf(buffer, 10000, L"%f %f", m_aptf[i].x, m_aptf[i].y);
+    for(int i = 0; i < lstrlen(buffer); i++)
+      vec.push_back(buffer[i]);
+    vec.push_back(' ');
+  }
+
+  return vec;
 }
 
 void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)

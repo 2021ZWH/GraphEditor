@@ -132,6 +132,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
+    <ClInclude Include="GraphFile.h" />
     <ClInclude Include="GraphItemCircle.h" />
     <ClInclude Include="GraphItemElliptic.h" />
     <ClInclude Include="GraphItemLine.h" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
+    <ClCompile Include="GraphFile.cpp" />
     <ClCompile Include="GraphItemCircle.cpp" />
     <ClCompile Include="GraphItemElliptic.cpp" />
     <ClCompile Include="GraphItemLine.cpp" />

@@ -6,12 +6,23 @@
 #include "ControlHandler.h"
 #include "Vector.h"
 
+enum ShapeType
+{
+  SHAPE_UNKNOWN,
+  SHAPE_LINE,
+  SHAPE_POLYLINE,
+  SHAPE_POLYBEZIER,
+  SHAPE_CIRCLE,
+  SHAPE_ELLIPTIC,
+  SHAPE_RECTANGLE
+};
+
 class GraphItemShape
 {
 public:
   GraphItemShape() = default;
   virtual ~GraphItemShape();
-
+  virtual Vector<TCHAR> toText();
   virtual void drawShape(HDC hdc,double xoff, double yoff) = 0;
   virtual void drawHandler(HDC hdc, double xoff, double yoff, double scale);
   virtual ControlHandler* getHandlerByPos(const PointF& pos);
@@ -26,6 +37,7 @@ public:
   virtual void setLineWidth(UINT width);
   virtual void setLineColor(COLORREF color);
   virtual void setFillColor(COLORREF color);
+  virtual void setTransParent(bool flag);
   virtual UINT getLineWidth() const;
   virtual COLORREF getLineColor() const;
   virtual COLORREF getFillColor() const;
@@ -34,10 +46,13 @@ protected:
 protected:
   Vector<ControlHandler*> m_ctrHandlers;
   ControlHandler* m_selectHandler = nullptr;
+
+  ShapeType m_shapeType = SHAPE_UNKNOWN;
   UINT m_lineWidth = 1;
   COLORREF m_lineColor = BGR_BLACK;
   COLORREF m_fillColor = BGR_WHITE;
   bool m_fTransparent = true;
+  
   
 };
 

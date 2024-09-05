@@ -9,6 +9,7 @@ class GraphItemPolyline : public GraphItemShape
 public:
   GraphItemPolyline(const PointF& startPos);
   ~GraphItemPolyline();
+  Vector<TCHAR> toText() override;
   void drawShape(HDC hdc, double xoff, double yoff) override;
   void move(double dx, double dy) override;
   bool isPointUpShape(const PointF& pos) override;

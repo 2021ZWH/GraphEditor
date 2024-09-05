@@ -1,8 +1,11 @@
 #include "GraphItemLine.h"
+#include <stdio.h>
+#include <wchar.h>
 
 GraphItemLine::GraphItemLine(PointF posA, PointF posB)
   :m_posA(posA),m_posB(posB)
 {
+  m_shapeType = SHAPE_LINE;
   m_ctrHandlers.resize(2);
   m_ctrHandlers[0] = new ControlHandler(this, HT_ALL, 0);
   m_ctrHandlers[1] = new ControlHandler(this, HT_ALL, 1);
@@ -13,6 +16,20 @@ GraphItemLine::GraphItemLine(PointF posA, PointF posB)
 GraphItemLine::~GraphItemLine()
 {
   clearCtrHandler();
+}
+
+Vector<TCHAR> GraphItemLine::toText()
+{
+  Vector<TCHAR> vec = GraphItemShape::toText();
+  vec.push_back('2');
+  vec.push_back(' ');
+  
+  TCHAR buffer[100];
+  swprintf(buffer, 100, L"%f %f %f %f", m_posA.x, m_posA.y, m_posB.x, m_posB.y);
+  for(int i = 0; i < lstrlen(buffer); i++)
+    vec.push_back(buffer[i]);
+  vec.push_back(' ');
+  return vec;
 }
 
 void GraphItemLine::drawShape(HDC hdc, double xoff, double yoff)

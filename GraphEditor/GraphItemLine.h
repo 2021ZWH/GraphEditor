@@ -11,7 +11,7 @@ class GraphItemLine : public GraphItemShape
 public:
   GraphItemLine(PointF posA,PointF posB);
   ~GraphItemLine();
-  
+  Vector<TCHAR> toText() override;
   void drawShape(HDC hdc, double xoff, double yoff);
   void move(double dx, double dy);
   bool isPointUpShape(const PointF& pos);

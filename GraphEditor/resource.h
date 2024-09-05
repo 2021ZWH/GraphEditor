@@ -17,8 +17,11 @@
 #define IDI_BEZIER                      144
 #define IDI_ELLIPTIC                    145
 #define IDI_POLYLINE                    147
-#define IDI_ICON1                       148
 #define IDI_CIRCLE                      148
+#define ID_32771                        32771
+#define ID_32772                        32772
+#define IDM_OPEN                        32773
+#define IDM_SAVE                        32774
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -27,7 +30,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_COMMAND_VALUE         32775
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

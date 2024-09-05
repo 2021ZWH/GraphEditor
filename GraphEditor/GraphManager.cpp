@@ -8,8 +8,16 @@ GraphManager::GraphManager(HWND hwnd)
 
 GraphManager::~GraphManager()
 {
+  clear();
+}
+
+void GraphManager::clear()
+{
+  m_selectMger.clearSelect();
+  m_selectMger.setHandler(nullptr);
   for(int i = 0; i < m_shapeVec.size(); i++)
     delete m_shapeVec[i];
+  m_shapeVec.clear();
 }
 
 UINT GraphManager::getWidth() const
@@ -65,6 +73,34 @@ void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
       vec[i]->drawHandler(hdc, rectf.left, rectf.top, 1.0/scale);
     }
   }
+}
+
+bool GraphManager::save(const TCHAR* szFilename)
+{
+  GraphFile gf(szFilename, FileMode::WRITE);
+  if(!gf.isOpen()) return false;
+
+  int ret = gf.writeFile(m_shapeVec);
+
+  return ret != -1;
+}
+
+bool GraphManager::open(const TCHAR* szFilename)
+{
+  GraphFile gf(szFilename, FileMode::READ);
+  if(!gf.isOpen()) return false;
+
+  Vector<GraphItemShape*> shapeVec;
+
+  int ret = gf.readFile(shapeVec);
+  if(ret != -1)
+  {
+    clear();
+    m_shapeVec = shapeVec;
+    freshView();
+    return true;
+  }
+  return false;
 }
 
 bool GraphManager::isSelect() const

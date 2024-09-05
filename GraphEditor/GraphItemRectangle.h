@@ -10,6 +10,7 @@ class GraphItemRectangle :
 public: 
   GraphItemRectangle(PointF beginPos, PointF endPos);
   ~GraphItemRectangle();
+  Vector<TCHAR> toText() override;
   void drawShape(HDC hdc, double xoff, double yoff) override;
   void move(double dx, double dy) override;
   

@@ -12,17 +12,21 @@
 #include "GraphItemElliptic.h"
 #include "Vector.h"
 #include "SelectShapeManager.h"
+#include "GraphFile.h"
 
 class GraphManager 
 {
 public:
   GraphManager(HWND m_hWnd);
   ~GraphManager();
- 
+  void clear();
   UINT getWidth() const;
   UINT getHeight() const;
-  HCURSOR getCursor(const PointF &scenePos );
-  void paint(HDC hdc, const RectF& rectf,double scale);
+  HCURSOR getCursor(const PointF &scenePos);
+  void paint(HDC hdc, const RectF& rectf, double scale);
+
+  bool save(const TCHAR* szFilename);
+  bool open(const TCHAR* szFIlename);
 
   bool isSelect() const;
 

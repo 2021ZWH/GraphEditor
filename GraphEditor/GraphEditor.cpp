@@ -106,6 +106,7 @@ void GraphEditor::onSize(WPARAM wParam, LPARAM lParam)
   int toolH = m_ptoolBar->getHeight();
   m_pGView->resize(x, y - toolH);
 
+  InvalidateRect(m_hWnd, NULL, true);
 }
 
 void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
@@ -135,5 +136,52 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
   case BT_RECTANGLE:
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);
     break;
+  case IDM_SAVE:
+    onSave();
+    break;
+  case IDM_OPEN:
+    onOpen();
+    break;
+  }
+}
+
+void GraphEditor::onSave()
+{
+  OPENFILENAME opfn;
+  WCHAR strFilename[MAX_PATH] = L"*.ge";//存放文件名
+
+  ZeroMemory(&opfn, sizeof opfn);
+  opfn.lStructSize = sizeof opfn;
+  opfn.lpstrFilter = L"自定义文件\0*.ge\0";
+  opfn.lpstrFile = strFilename;
+  opfn.nMaxFile = sizeof(strFilename);
+  //设置标志位，检查目录或文件是否存在
+  opfn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+  if(GetSaveFileName(&opfn) != 0)
+  {
+    bool fSuccess = m_pGView->save(strFilename);
+    if(fSuccess)
+      MessageBox(m_hWnd, L"ok", NULL, MB_OK);
+  }
+}
+
+void GraphEditor::onOpen()
+{
+  OPENFILENAME opfn;
+  WCHAR strFilename[MAX_PATH] = L"*.ge";//存放文件名
+
+  ZeroMemory(&opfn, sizeof opfn);
+  opfn.lStructSize = sizeof opfn;
+  opfn.lpstrFilter = L"自定义文件\0*.ge\0";
+  opfn.lpstrFile = strFilename;
+  opfn.nMaxFile = sizeof(strFilename);
+  //设置标志位，检查目录或文件是否存在
+  opfn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+  if(GetOpenFileName(&opfn) != 0)
+  {
+    bool fSuccess = m_pGView->open(strFilename);
+ 
   }
 }

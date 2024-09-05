@@ -130,7 +130,7 @@ public:
 
   }
 
-  T& operator[](size_t index)
+  T& operator[](size_t index) 
   {
     if(index >= _size || index < 0)
     {

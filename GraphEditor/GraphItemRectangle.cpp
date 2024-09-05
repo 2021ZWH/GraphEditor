@@ -1,7 +1,10 @@
 #include "GraphItemRectangle.h"
+#include <stdio.h>
+#include <wchar.h>
 
 GraphItemRectangle::GraphItemRectangle(PointF beginPos, PointF endPos)
 {
+  m_shapeType = SHAPE_RECTANGLE;
   m_aptF.resize(4);
   m_aptF[0] = { beginPos.x,endPos.y };
   m_aptF[1] = beginPos;
@@ -24,6 +27,27 @@ GraphItemRectangle::GraphItemRectangle(PointF beginPos, PointF endPos)
 GraphItemRectangle::~GraphItemRectangle()
 {
   GraphItemShape::clearCtrHandler();
+}
+
+Vector<TCHAR> GraphItemRectangle::toText()
+{
+  Vector<TCHAR> vec = GraphItemShape::toText();
+
+  TCHAR buffer[100];
+  _itow_s(m_aptF.size(), buffer, 10);
+  for(int i = 0; i < lstrlen(buffer); i++)
+    vec.push_back(buffer[i]);
+  vec.push_back(' ');
+
+  for(int i = 0; i < m_aptF.size(); i++)
+  {
+    swprintf(buffer, 100, L"%f %f", m_aptF[i].x, m_aptF[i].y);
+    for(int i = 0; i < lstrlen(buffer); i++)
+      vec.push_back(buffer[i]);
+    vec.push_back(' ');
+  }
+
+  return vec;
 }
 
 void GraphItemRectangle::drawShape(HDC hdc,double xoff, double yoff)

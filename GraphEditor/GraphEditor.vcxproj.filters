@@ -87,6 +87,9 @@
     <ClInclude Include="GraphItemCircle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GraphFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -135,6 +138,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GraphItemCircle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

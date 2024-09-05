@@ -18,11 +18,13 @@ private:
   LRESULT CALLBACK runProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
   void onSize(WPARAM wParam, LPARAM lParam);
   void onCommand(WPARAM wParam, LPARAM lParam);
-
+  void onSave();
+  void onOpen();
 private:
   ToolBar *m_ptoolBar = nullptr;
   GraphView *m_pGView = nullptr;
 
+  TCHAR m_szFilename[200];
 };
 
 

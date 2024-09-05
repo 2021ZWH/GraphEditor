@@ -17,6 +17,8 @@ public:
   void destroy();
   void resize(int w, int h);
   void setMode(ToolType toolType);
+  bool save(const TCHAR* szFilename);
+  bool open(const TCHAR* szFilename);
   PointF mapToScene(const POINT &viewPos);
   POINT mapToView(const PointF &scenePos);
 private:

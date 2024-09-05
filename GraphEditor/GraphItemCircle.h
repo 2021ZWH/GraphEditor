@@ -8,6 +8,7 @@ class GraphItemCircle :
 public:
   GraphItemCircle(const PointF &beginPos,const PointF &endPos);
   ~GraphItemCircle();
+  Vector<TCHAR> toText() override;
   void drawShape(HDC hdc, double xoff, double yoff) override;
   void move(double dx, double dy) override;
   bool isPointUpShape(const PointF& pos) override;

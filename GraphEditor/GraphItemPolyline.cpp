@@ -1,13 +1,37 @@
 #include "GraphItemPolyline.h"
+#include <stdio.h>
+#include <wchar.h>
 
 GraphItemPolyline::GraphItemPolyline(const PointF &startPos)
 {
+  m_shapeType = SHAPE_POLYLINE;
   addPos(startPos);
 }
 
 GraphItemPolyline::~GraphItemPolyline()
 {
   clearCtrHandler();
+}
+
+Vector<TCHAR> GraphItemPolyline::toText()
+{
+  Vector<TCHAR> vec = GraphItemShape::toText();
+
+  TCHAR buffer[10000];
+  _itow_s(m_linePos.size(), buffer, 10);
+  for(int i = 0; i < lstrlen(buffer); i++)
+    vec.push_back(buffer[i]);
+  vec.push_back(' ');
+
+  for(int i = 0; i < m_linePos.size(); i++)
+  {
+    swprintf(buffer, 10000, L"%f %f", m_linePos[i].x, m_linePos[i].y);
+    for(int i = 0; i < lstrlen(buffer); i++)
+      vec.push_back(buffer[i]);
+    vec.push_back(' ');
+  }
+
+  return vec;
 }
 
 void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)

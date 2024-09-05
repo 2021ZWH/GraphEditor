@@ -57,7 +57,7 @@ void GraphView::destroy()
 
 void GraphView::resize(int w,int h)
 {
-  MoveWindow(m_hWnd, 0, 28, w, h, false);
+  MoveWindow(m_hWnd, 0, 28, w, h, true);
   
   if(m_pSbMger && m_pGhMger)
   {
@@ -69,6 +69,16 @@ void GraphView::resize(int w,int h)
 void GraphView::setMode(ToolType toolType)
 {
   m_pToolMger->setToolType(toolType);
+}
+
+bool GraphView::save(const TCHAR* szFilename)
+{
+  return m_pGhMger->save(szFilename);
+}
+
+bool GraphView::open(const TCHAR* szFilename)
+{
+  return m_pGhMger->open(szFilename);
 }
 
 PointF GraphView::mapToScene(const POINT &viewPos)
