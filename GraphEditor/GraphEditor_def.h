@@ -97,8 +97,8 @@ struct RectF
     return true;
   }
 
-  bool isSegmentIntersect(const SegmentF &seg) const
-  { 
+  bool isSegmentIntersect(const SegmentF& seg) const
+  {
     // 判断线段两点是否在矩形
     if(isPointIn(seg.posA)) return true;
     if(isPointIn(seg.posB)) return true;

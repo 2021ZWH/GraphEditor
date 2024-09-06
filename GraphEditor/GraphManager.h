@@ -23,13 +23,15 @@ public:
   UINT getWidth() const;
   UINT getHeight() const;
   HCURSOR getCursor(const PointF &scenePos);
-  void paint(HDC hdc, const RectF& rectf, double scale);
 
+  void paint(HDC hdc, const RectF& rectf, double scale);
   bool save(const TCHAR* szFilename);
   bool open(const TCHAR* szFIlename);
+  bool copy();
+  bool cut();
+  bool paste();
 
   bool isSelect() const;
-
   void addShape(GraphItemShape* shape);
   void setSelectShape(const PointF& pos);
   void setSelectShape(const RectF& rectf);

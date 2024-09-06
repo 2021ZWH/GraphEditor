@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ClipboardManager.h" />
     <ClInclude Include="ConSoleDebug.h" />
     <ClInclude Include="ControlHandler.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GraphCoder.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
     <ClInclude Include="GraphFile.h" />
@@ -154,7 +156,9 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClipboardManager.cpp" />
     <ClCompile Include="ControlHandler.cpp" />
+    <ClCompile Include="GraphCoder.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="GraphFile.cpp" />
     <ClCompile Include="GraphItemCircle.cpp" />

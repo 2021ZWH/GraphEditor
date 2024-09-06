@@ -1,4 +1,6 @@
 #include "GraphManager.h"
+#include "GraphCoder.h"
+#include "ClipboardManager.h"
 
 GraphManager::GraphManager(HWND hwnd)
   :m_hWnd(hwnd)
@@ -77,30 +79,100 @@ void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
 
 bool GraphManager::save(const TCHAR* szFilename)
 {
+  TCHAR* szData = nullptr;
+  GraphCoder gc;
+
+  if(gc.code(m_shapeVec, &szData))
+    return false;
+
   GraphFile gf(szFilename, FileMode::WRITE);
-  if(!gf.isOpen()) return false;
+  if(!gf.isOpen()) 
+    return false;
 
-  int ret = gf.writeFile(m_shapeVec);
+  int ret = gf.writeFile(szData);
 
-  return ret != -1;
+  delete[] szData;
+  return ret == 0;
 }
 
 bool GraphManager::open(const TCHAR* szFilename)
 {
   GraphFile gf(szFilename, FileMode::READ);
-  if(!gf.isOpen()) return false;
+  if(!gf.isOpen()) 
+    return false;
 
+  TCHAR* szData = nullptr;
+  if(gf.readFile(&szData))
+    return false;
+
+  GraphCoder gc;
   Vector<GraphItemShape*> shapeVec;
-
-  int ret = gf.readFile(shapeVec);
-  if(ret != -1)
+  int ret = gc.decode(szData, shapeVec);
+  
+  if(!ret)
   {
     clear();
     m_shapeVec = shapeVec;
     freshView();
-    return true;
   }
+
+  delete[] szData;
+  return ret == 0;
+}
+
+bool GraphManager::copy()
+{
+  if(!isSelect())
+    return false;
+
+  Vector<GraphItemShape*> selectShape = m_selectMger.getShape();
+  TCHAR* szData = nullptr;
+
+  GraphCoder gc;
+  if(gc.code(selectShape, &szData) != 0)
+    return false;
+
+  ClipboardManager clibMger(m_hWnd);
+  bool ret = clibMger.setText(szData);
+
+  delete[] szData;
+  return ret;
+}
+
+bool GraphManager::cut()
+{
+
   return false;
+}
+
+bool GraphManager::paste()
+{
+  ClipboardManager clipMger(m_hWnd);
+
+  TCHAR* szData = clipMger.getText();
+
+  if(szData == nullptr)
+    false;
+
+  GraphCoder gc;
+  Vector<GraphItemShape*> shapeVec;
+  int ret = gc.decode(szData, shapeVec);
+
+  if(ret == 0)
+  {
+    m_selectMger.clearSelect();
+    for(int i = 0; i < shapeVec.size(); i++)
+    {
+      m_shapeVec.push_back(shapeVec[i]);
+      m_selectMger.addShape(shapeVec[i]);
+    }
+
+    freshView();
+  }
+
+  delete[] szData;
+
+  return ret == 0;
 }
 
 bool GraphManager::isSelect() const

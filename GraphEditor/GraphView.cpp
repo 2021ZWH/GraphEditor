@@ -81,6 +81,21 @@ bool GraphView::open(const TCHAR* szFilename)
   return m_pGhMger->open(szFilename);
 }
 
+bool GraphView::copy()
+{
+  return m_pGhMger->copy();
+}
+
+bool GraphView::cut()
+{
+  return m_pGhMger->cut();
+}
+
+bool GraphView::paste()
+{
+  return m_pGhMger->paste();
+}
+
 PointF GraphView::mapToScene(const POINT &viewPos)
 {
   PointF centerPos = { (double)getWidth() / 2,(double)getHeight() / 2 };

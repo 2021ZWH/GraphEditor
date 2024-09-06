@@ -20,6 +20,11 @@ private:
   void onCommand(WPARAM wParam, LPARAM lParam);
   void onSave();
   void onOpen();
+  void onCopy();
+  void onCut();
+  void onPaste();
+  void onUndo();
+  void onRedo();
 private:
   ToolBar *m_ptoolBar = nullptr;
   GraphView *m_pGView = nullptr;

@@ -19,6 +19,9 @@ public:
   void setMode(ToolType toolType);
   bool save(const TCHAR* szFilename);
   bool open(const TCHAR* szFilename);
+  bool copy();
+  bool cut();
+  bool paste();
   PointF mapToScene(const POINT &viewPos);
   POINT mapToView(const PointF &scenePos);
 private:

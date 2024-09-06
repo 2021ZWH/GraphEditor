@@ -142,6 +142,21 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
   case IDM_OPEN:
     onOpen();
     break;
+  case IDM_COPY:
+    onCopy();
+    break;
+  case IDM_CUT:
+    onCut();
+    break;
+  case IDM_PASTE:
+    onPaste();
+    break;
+  case IDM_UNDO:
+    onUndo();
+    break;
+  case IDM_REDO:
+    onRedo();
+    break;
   }
 }
 
@@ -184,4 +199,29 @@ void GraphEditor::onOpen()
     bool fSuccess = m_pGView->open(strFilename);
  
   }
+}
+
+void GraphEditor::onCopy()
+{
+  m_pGView->copy();
+}
+
+void GraphEditor::onCut()
+{
+  m_pGView->cut();
+}
+
+void GraphEditor::onPaste()
+{
+  m_pGView->paste();
+}
+
+void GraphEditor::onUndo()
+{
+
+}
+
+void GraphEditor::onRedo()
+{
+
 }

@@ -90,6 +90,12 @@
     <ClInclude Include="GraphFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ClipboardManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphCoder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -141,6 +147,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GraphFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipboardManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphCoder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
