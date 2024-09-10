@@ -22,6 +22,8 @@ public:
   bool copy();
   bool cut();
   bool paste();
+  bool undo();
+  bool redo();
   PointF mapToScene(const POINT &viewPos);
   POINT mapToView(const PointF &scenePos);
 private:
@@ -30,6 +32,7 @@ private:
   void onCreate();
   void onPaint();
   void onSetCursor(LPARAM lParam);
+  void onKeyDown(WPARAM wParam, LPARAM lParam);
   void onMouseLButtonDown(WPARAM wParam, LPARAM lParam);
   void onMouseLButtonUp(WPARAM wParam, LPARAM lParam);
   void onMouseRButtonDown(WPARAM wParam, LPARAM lParam);

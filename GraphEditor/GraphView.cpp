@@ -18,8 +18,7 @@ GraphView::~GraphView()
 
 void GraphView::init()
 {
-
-  m_hBgdBru =CreateSolidBrush(RGB(255,255,255));
+  m_hBgdBru = CreateSolidBrush(RGB(255, 255, 255));
   WNDCLASS WC = { 0 };
   WC.cbClsExtra = 0;
   WC.cbWndExtra = 0;
@@ -43,6 +42,8 @@ void GraphView::init()
     this);
 
   ShowWindow(m_hWnd, SW_SHOW);
+
+  SetFocus(m_hWnd);
 }
 
 void GraphView::destroy()
@@ -94,6 +95,16 @@ bool GraphView::cut()
 bool GraphView::paste()
 {
   return m_pGhMger->paste();
+}
+
+bool GraphView::undo()
+{
+  return m_pGhMger->undo();
+}
+
+bool GraphView::redo()
+{
+  return m_pGhMger->redo();
 }
 
 PointF GraphView::mapToScene(const POINT &viewPos)
@@ -165,6 +176,9 @@ LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   ConsoleDebug(L"\n", 1);
   switch (uMsg)
   {
+  case WM_KEYDOWN:
+    onKeyDown(wParam,lParam);
+    break;
   case WM_LBUTTONDOWN:
     onMouseLButtonDown(wParam, lParam);
     break;
@@ -267,9 +281,20 @@ void GraphView::onSetCursor(LPARAM lParam)
     SetCursor(LoadCursor(NULL, IDC_CROSS));
   }
 }
+
+void GraphView::onKeyDown(WPARAM wParam, LPARAM lParam)
+{
+  switch(wParam)
+  {
+  case VK_DELETE:
+    m_pGhMger->delSelectShape();
+    break;
+  }
+}
   
 void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
 {
+  SetFocus(m_hWnd);
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
   m_startPos = mapToScene({ x,y });
@@ -279,12 +304,15 @@ void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
     if(m_pToolMger->getToolType() == DRAW_POLYLINE)
       drawNext({ x,y });
   }
-  else
+  else if(m_pToolMger->getToolType() == EDIT_MOUSE)
   {
-    m_pGhMger->onMouseLButtonDown(mapToScene({ x,y }), m_pToolMger->getToolType() == EDIT_MOUSE);
-
+    m_pGhMger->onMouseLButtonDown(mapToScene({ x,y }));
     if(!m_pGhMger->isSelect())
       startDraw({ x,y });
+  }
+  else
+  {
+    startDraw({ x,y });
   }
 
 }

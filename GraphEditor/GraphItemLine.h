@@ -16,7 +16,7 @@ public:
   void move(double dx, double dy);
   bool isPointUpShape(const PointF& pos);
   bool isRectCrossShape(const RectF& rectf);
-  bool shapeResize(double dx, double dy, ControlHandler* handler);
+  bool shapeResizeTo(const PointF &newPos, ControlHandler* handler);
 private:
   void updateCtrHandler();
 private:

@@ -81,7 +81,7 @@ bool GraphItemLine::isRectCrossShape(const RectF& rectf)
   return rectf.isSegmentIntersect(seg);
 }
 
-bool GraphItemLine::shapeResize(double dx, double dy, ControlHandler* handler)
+bool GraphItemLine::shapeResizeTo(const PointF &pos, ControlHandler* handler)
 {
   if(handler->getOwnerShape() != this) return false;
 
@@ -91,14 +91,12 @@ bool GraphItemLine::shapeResize(double dx, double dy, ControlHandler* handler)
   {
     case 0:
     {
-      m_posA.x += dx;
-      m_posA.y += dy;
+      m_posA = pos;
       break;
     }
     case 1:
     {
-      m_posB.x += dx;
-      m_posB.y += dy;
+      m_posB = pos;
       break;
     }
   }

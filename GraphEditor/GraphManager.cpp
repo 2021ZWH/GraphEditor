@@ -3,7 +3,7 @@
 #include "ClipboardManager.h"
 
 GraphManager::GraphManager(HWND hwnd)
-  :m_hWnd(hwnd)
+  :m_hWnd(hwnd),m_pCmdMger(new GraphCommandManager)
 {
 
 }
@@ -11,15 +11,19 @@ GraphManager::GraphManager(HWND hwnd)
 GraphManager::~GraphManager()
 {
   clear();
+  delete m_pCmdMger;
+  
 }
 
 void GraphManager::clear()
 {
   m_selectMger.clearSelect();
+  m_pCmdMger->clear();
   m_selectMger.setHandler(nullptr);
   for(int i = 0; i < m_shapeVec.size(); i++)
     delete m_shapeVec[i];
   m_shapeVec.clear();
+
 }
 
 UINT GraphManager::getWidth() const
@@ -60,6 +64,8 @@ void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
 
   for(int i = 0; i < m_shapeVec.size(); i++)
   {
+    if(!m_shapeVec[i]->isVisible())
+      continue;
     if(m_shapeVec[i]->isRectCrossShape(rectf))
     {
       m_shapeVec[i]->drawShape(hdc, rectf.left, rectf.top);
@@ -175,6 +181,26 @@ bool GraphManager::paste()
   return ret == 0;
 }
 
+bool GraphManager::undo()
+{
+  if(!m_pCmdMger->canUndo())
+    return false;
+
+  m_pCmdMger->undo();
+  freshView();
+  return true;
+}
+
+bool GraphManager::redo()
+{
+  if(!m_pCmdMger->canRedo())
+    return false;
+
+  m_pCmdMger->redo();
+  freshView();
+  return true;
+}
+
 bool GraphManager::isSelect() const
 {
   return m_selectMger.isSelect();
@@ -183,7 +209,30 @@ bool GraphManager::isSelect() const
 void GraphManager::addShape(GraphItemShape* shape)
 {
   m_shapeVec.push_back(shape);
+  m_selectMger.clearSelect();
   m_selectMger.addShape(shape);
+
+  GraphCommand *cmd = new GraphAddCommand(shape,&m_selectMger);
+  m_pCmdMger->addCommand(cmd);
+}
+
+bool GraphManager::delSelectShape()
+{
+  if(!isSelect()) 
+    return false;
+
+  Vector<GraphItemShape*> vec = m_selectMger.getShape();
+  for(int i = 0; i < vec.size(); i++)
+  {
+    vec[i]->setVisible(false);
+  }
+
+  GraphCommand* cmd = new GraphDelCommand(vec, &m_selectMger);
+  m_pCmdMger->addCommand(cmd);
+
+  m_selectMger.clearSelect();
+  freshView();
+  return true;
 }
 
 void GraphManager::setSelectShape(const PointF& pos)
@@ -202,69 +251,49 @@ void GraphManager::setSelectShape(const RectF& rectf)
   }
 }
 
-void GraphManager::onMouseLButtonDown(const PointF& scenePos,bool canSelect)
+void GraphManager::onMouseLButtonDown(const PointF& scenePos)
 {
-  bool freshWnd = false;
-  bool flag = false;
-  m_mouseBeginPos = scenePos;
-  Vector<GraphItemShape*> vec = m_selectMger.getShape();
-  for(int i = 0; i < vec.size(); i++)
+  m_mouseBeginPos = m_mouseEndPos = scenePos;
+  if(isSelect())
   {
-    if(vec[i]->isPointUpShape(scenePos))
-    {
-      flag = true;
-      break;
-    }
-  }
-  if(flag) return;
-  if(!canSelect)
-  {
-    m_selectMger.setHandler(nullptr);
-    m_selectMger.clearSelect();
-    InvalidateRect(m_hWnd, NULL, false);
-    return;
-  }
+    Vector<GraphItemShape*> shapeVec = m_selectMger.getShape();
 
-  m_selectMger.setHandler(nullptr); // 判断是否选中控制点
- // Vector<GraphItemShape*> vec = m_selectMger.getShape();
-  for(int i = 0; i < vec.size(); i++)
-  {
-    ControlHandler* handler = vec[i]->getHandlerByPos(scenePos);
-    if(handler != nullptr)
+    for(int i = 0; i < shapeVec.size(); i++) // 判断是否选中控制点
     {
-      m_selectMger.setHandler(handler);
-      handler->getOwnerShape()->SetSelectHandler(handler);
-      break;
-    }
-  }
-
-  if(m_selectMger.getHandler() == nullptr)  // 若没选中控制点
-  {
-    m_selectMger.clearSelect();  // 清空选中
-    freshWnd = true;
-
-    for(int i = 0; i < m_shapeVec.size(); i++)  // 若选中矩形，添加
-    {
-      if(m_shapeVec[i]->isPointUpShape(scenePos))
+      ControlHandler* handler = shapeVec[i]->getHandlerByPos(scenePos);
+      if(handler != nullptr)
       {
-        m_selectMger.addShape(m_shapeVec[i]);
-        break;
+        shapeVec[i]->SetSelectHandler(handler);
+        m_selectMger.setHandler(handler);
+        m_handlerBeginPos = handler->getPos();
+        freshView();
+        return;
       }
     }
+
+    for(int i = 0; i < shapeVec.size(); i++) // 判断是否选中已选中的图形
+    {
+      if(shapeVec[i]->isPointUpShape(scenePos))
+        return;
+    }
+
+    m_selectMger.clearSelect();
+    freshView();
+    
   }
 
-  
- 
-  if(freshWnd) InvalidateRect(m_hWnd, NULL, false);
+  if(setSelectShapeByPos(scenePos))
+    freshView();
+
 }
 
 void GraphManager::onMouseMove(bool fLButtonDown, const PointF& scenePos)
 {
   if(!fLButtonDown) return;
 
-  double xoff = scenePos.x - m_mouseBeginPos.x;
-  double yoff = scenePos.y - m_mouseBeginPos.y;
-  m_mouseBeginPos = scenePos;
+  double xoff = scenePos.x - m_mouseEndPos.x;
+  double yoff = scenePos.y - m_mouseEndPos.y;
+  m_mouseEndPos = scenePos;
   bool freshWnd = false;
   Vector<GraphItemShape*> vec = m_selectMger.getShape();
 
@@ -272,7 +301,7 @@ void GraphManager::onMouseMove(bool fLButtonDown, const PointF& scenePos)
   {
     // 移动控制点
     GraphItemShape* shape = m_selectMger.getHandler()->getOwnerShape();
-    shape->shapeResize(xoff, yoff, m_selectMger.getHandler());
+    shape->shapeResizeTo(scenePos, m_selectMger.getHandler());
     freshWnd = true;
   }
   else
@@ -287,12 +316,31 @@ void GraphManager::onMouseMove(bool fLButtonDown, const PointF& scenePos)
     }
   }
 
-  if(freshWnd) InvalidateRect(m_hWnd, NULL, false);
+  if(freshWnd)
+    freshView();
 }
 
 void GraphManager::onMouseLButtonUp(const PointF& scenePos)
 {
-  m_selectMger.setHandler(nullptr); // 控制点操作结束
+  m_mouseEndPos = scenePos;
+  GraphCommand* cmd = nullptr;
+  if(m_selectMger.getHandler() != nullptr) // 移动控制点操作
+  {
+    ControlHandler* handler = m_selectMger.getHandler();
+    cmd = new GraphHandlerCommand(handler, &m_selectMger, m_handlerBeginPos, m_mouseEndPos);
+    m_selectMger.setHandler(nullptr);
+  }
+  else if(isSelect())
+  {
+    Vector<GraphItemShape*> shapeVec = m_selectMger.getShape();
+    cmd = new GraphMoveCommand(shapeVec, &m_selectMger, 
+                               m_mouseEndPos.x - m_mouseBeginPos.x, 
+                               m_mouseEndPos.y - m_mouseBeginPos.y);
+  }
+
+  if(cmd != nullptr)
+    m_pCmdMger->addCommand(cmd);
+
 }
 
 void GraphManager::freshView()
@@ -308,6 +356,7 @@ bool GraphManager::setSelectShapeByPos(const PointF& pos)
 
   for(int i = 0; i < m_shapeVec.size(); i++)  // 若选中图形，添加
   {
+    if(!m_shapeVec[i]->isVisible()) continue;
     if(m_shapeVec[i]->isPointUpShape(pos))
     {
       m_selectMger.addShape(m_shapeVec[i]);
@@ -327,6 +376,7 @@ bool GraphManager::setSelectShapeByRect(const RectF& rectf)
 
   for(int i = 0; i < m_shapeVec.size(); i++)
   {
+    if(!m_shapeVec[i]->isVisible()) continue;
     if(m_shapeVec[i]->isRectCrossShape(rectf))
     {
       m_selectMger.addShape(m_shapeVec[i]);

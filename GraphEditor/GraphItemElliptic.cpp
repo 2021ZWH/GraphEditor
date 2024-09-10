@@ -53,10 +53,10 @@ Vector<TCHAR> GraphItemElliptic::toText()
 
 void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
 {
-  int left = m_aptF[0].x - xoff;
-  int right = m_aptF[3].x - xoff;
-  int top = m_aptF[1].y - yoff;
-  int bottom = m_aptF[3].y - yoff;
+  int left = min(m_aptF[0].x, m_aptF[2].x) - xoff;
+  int right = max(m_aptF[0].x, m_aptF[2].x) - xoff;
+  int top = min(m_aptF[0].y, m_aptF[2].y) - yoff;
+  int bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
 
   HBRUSH hbru;
   if(m_fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -85,11 +85,13 @@ void GraphItemElliptic::move(double dx, double dy)
 
 bool GraphItemElliptic::isPointUpShape(const PointF& pos)
 {
-  double a = fabs((m_aptF[3].x - m_aptF[0].x) / 2); // 长轴长
-  double b = fabs((m_aptF[1].y - m_aptF[0].y) / 2); // 短轴长
+  double width = max(m_aptF[0].x, m_aptF[2].x) - min(m_aptF[0].x, m_aptF[2].x);
+  double height = max(m_aptF[0].y, m_aptF[2].y) - min(m_aptF[0].y, m_aptF[2].y);
+  double a = width / 2; // 长轴长
+  double b = height / 2; // 短轴长
   PointF p0;  // 中心点
-  p0.x = (m_aptF[0].x + m_aptF[3].x) / 2;
-  p0.y = (m_aptF[1].y + m_aptF[0].y) / 2;
+  p0.x = (m_aptF[0].x + m_aptF[2].x) / 2;
+  p0.y = (m_aptF[0].y + m_aptF[2].y) / 2;
 
   double val = pow(pos.x - p0.x, 2) / pow(a, 2) + pow(pos.y - p0.y,2) / pow(b, 2);
   if(fabs(val - 1) <= 0.05) return true;
@@ -99,58 +101,58 @@ bool GraphItemElliptic::isPointUpShape(const PointF& pos)
 
 bool GraphItemElliptic::isRectCrossShape(const RectF& rectf)
 {
-  RectF rect = { m_aptF[1].x,m_aptF[1].y,m_aptF[3].x,m_aptF[3].y };
+  RectF rect;
+  rect.left = min(m_aptF[0].x, m_aptF[2].x);
+  rect.right = max(m_aptF[0].x, m_aptF[2].x);
+  rect.top = min(m_aptF[0].y, m_aptF[2].y);
+  rect.bottom = max(m_aptF[0].y, m_aptF[2].y);
 
   if(!rect.isRectIntersect(rectf)) return false; // 判断包围盒相不相交
 
   return true;
 }
 
-bool GraphItemElliptic::shapeResize(double dx, double dy, ControlHandler* handler)
+bool GraphItemElliptic::shapeResizeTo(const PointF &newPos, ControlHandler* handler)
 {
   if(handler->getOwnerShape() != this) return false;
   int id = handler->getId();
   switch(id)
   {
   case 0:
-    m_aptF[0].x += dx;
-    m_aptF[0].y += dy;
-    m_aptF[1].x += dx;
-    m_aptF[3].y += dy;
+    m_aptF[0] = newPos;
+    m_aptF[1].x = m_aptF[0].x;
+    m_aptF[3].y = m_aptF[0].y;
     break;
   case 1:
-    m_aptF[0].x += dx;
-    m_aptF[1].x += dx;
+    m_aptF[0].x = newPos.x;
+    m_aptF[1].x = newPos.x;
     break;
   case 2:
-    m_aptF[1].x += dx;
-    m_aptF[1].y += dy;
-    m_aptF[0].x += dx;
-    m_aptF[2].y += dy;
+    m_aptF[1] = newPos;
+    m_aptF[0].x = m_aptF[1].x;
+    m_aptF[2].y = m_aptF[1].y;
     break;
   case 3:
-    m_aptF[1].y += dy;
-    m_aptF[2].y += dy;
+    m_aptF[1].y = newPos.y;
+    m_aptF[2].y = newPos.y;
     break;
   case 4:
-    m_aptF[2].x += dx;
-    m_aptF[2].y += dy;
-    m_aptF[1].y += dy;
-    m_aptF[3].x += dx;
+    m_aptF[2] = newPos;
+    m_aptF[3].x = m_aptF[2].x;
+    m_aptF[1].y = m_aptF[2].y;
     break;
   case 5:
-    m_aptF[2].x += dx;
-    m_aptF[3].x += dx;
+    m_aptF[2].x = newPos.x;
+    m_aptF[3].x = newPos.x;
     break;
   case 6:
-    m_aptF[3].x += dx;
-    m_aptF[3].y += dy;
-    m_aptF[2].x += dx;
-    m_aptF[0].y += dy;
+    m_aptF[3] = newPos;
+    m_aptF[2].x = m_aptF[3].x;
+    m_aptF[0].y = m_aptF[3].y;
     break;
   case 7:
-    m_aptF[0].y += dy;
-    m_aptF[3].y += dy;
+    m_aptF[3].y = newPos.y;
+    m_aptF[0].y = newPos.y;
     break;
   }
   

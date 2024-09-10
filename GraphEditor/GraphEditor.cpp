@@ -30,19 +30,18 @@ void GraphEditor::init()
   RegisterClass(&WC);
   m_hWnd = CreateWindow(TEXT("GraphEditor"),
     TEXT("GraphEditor"),
-    WS_OVERLAPPEDWINDOW| WS_CLIPCHILDREN| WS_CLIPSIBLINGS,
+    WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
     100, 50, 1200, 800,
     m_hParent,
-    LoadMenu(m_hIns,MAKEINTRESOURCE(IDC_GRAPHEDITOR)),
+    m_hMenu = LoadMenu(m_hIns, MAKEINTRESOURCE(IDC_GRAPHEDITOR)),
     m_hIns,
     this);
  
-
+  m_hAccel = LoadAccelerators(m_hIns, MAKEINTRESOURCE(IDC_GRAPHEDITOR));
   ShowWindow(m_hWnd, SW_SHOW);
   
   m_ptoolBar->init();
   m_pGView->init();
-
 }
 
 void GraphEditor::destroy()
@@ -96,6 +95,13 @@ LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 }
 
+bool GraphEditor::translateAccelator(MSG* lpMsg)
+{
+  if(m_hMenu == NULL || m_hAccel == NULL)
+    return false;
+  return TranslateAccelerator(m_hWnd, m_hAccel, lpMsg);
+}
+
 void GraphEditor::onSize(WPARAM wParam, LPARAM lParam)
 {
   int x = LOWORD(lParam);
@@ -113,7 +119,7 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
 {
   ConsoleDebug((int)(wParam));
   ConsoleDebug(L"\n", 1);
-  switch(wParam)
+  switch(LOWORD(wParam))
   {
   case BT_EDITMODE:
     m_pGView->setMode(ToolType::EDIT_MOUSE);
@@ -218,10 +224,10 @@ void GraphEditor::onPaste()
 
 void GraphEditor::onUndo()
 {
-
+  m_pGView->undo();
 }
 
 void GraphEditor::onRedo()
 {
-
+  m_pGView->redo();
 }

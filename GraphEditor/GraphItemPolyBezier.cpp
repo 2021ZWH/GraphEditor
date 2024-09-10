@@ -93,15 +93,16 @@ bool GraphItemPolyBezier::isRectCrossShape(const RectF& rectf)
   return  false;
 }
 
-bool GraphItemPolyBezier::shapeResize(double dx, double dy, ControlHandler* handler)
+bool GraphItemPolyBezier::shapeResizeTo(const PointF &pos, ControlHandler* handler)
 {
   int id = handler->getId();
   if(handler->getOwnerShape() != this) return false;
 
   if(id % 3 == 1) // 说明移动的是端点
   {
-    m_aptf[id].x += dx;
-    m_aptf[id].y += dy;
+    double dx = pos.x - m_aptf[id].x;
+    double dy = pos.y - m_aptf[id].y;
+    m_aptf[id] = pos;
     m_ctrHandlers[id]->setPos(m_aptf[id]);
     if(id - 1 > 0)
     {
@@ -118,8 +119,7 @@ bool GraphItemPolyBezier::shapeResize(double dx, double dy, ControlHandler* hand
   }
   else // 移动控制点
   {
-    m_aptf[id].x += dx;
-    m_aptf[id].y += dy;
+    m_aptf[id] = pos;
     m_ctrHandlers[id]->setPos(m_aptf[id]);
   }
   return true;

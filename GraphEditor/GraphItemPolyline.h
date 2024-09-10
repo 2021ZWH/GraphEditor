@@ -14,7 +14,7 @@ public:
   void move(double dx, double dy) override;
   bool isPointUpShape(const PointF& pos) override;
   bool isRectCrossShape(const RectF& rectf) override;
-  bool shapeResize(double dx, double dy, ControlHandler* handler) override;
+  bool shapeResizeTo(const PointF &newPos, ControlHandler* handler) override;
   void addPos(const PointF& pos) override;
 private:
   void updateCtrHandler();

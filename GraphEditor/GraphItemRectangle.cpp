@@ -126,51 +126,47 @@ bool GraphItemRectangle::isRectCrossShape(const RectF& rectf)
   return ret;
 }
 
-bool GraphItemRectangle::shapeResize(double dx,double dy, ControlHandler* handler)
+bool GraphItemRectangle::shapeResizeTo(const PointF &newPos, ControlHandler* handler)
 {
   if(handler->getOwnerShape() != this) return false;
   int id = handler->getId();
   switch(id)
   {
   case 0:
-    m_aptF[0].x += dx;
-    m_aptF[0].y += dy;
-    m_aptF[1].x += dx;
-    m_aptF[3].y += dy;
+    m_aptF[0] = newPos;
+    m_aptF[1].x = m_aptF[0].x;
+    m_aptF[3].y = m_aptF[0].y;
     break;
   case 1:
-    m_aptF[0].x += dx;
-    m_aptF[1].x += dx;
+    m_aptF[0].x = newPos.x;
+    m_aptF[1].x = newPos.x;
     break;
   case 2:
-    m_aptF[1].x += dx;
-    m_aptF[1].y += dy;
-    m_aptF[0].x += dx;
-    m_aptF[2].y += dy;
+    m_aptF[1] = newPos;
+    m_aptF[0].x = m_aptF[1].x;
+    m_aptF[2].y = m_aptF[1].y;
     break;
   case 3:
-    m_aptF[1].y += dy;
-    m_aptF[2].y += dy;
+    m_aptF[1].y = newPos.y;
+    m_aptF[2].y = newPos.y;
     break;
   case 4:
-    m_aptF[2].x += dx;
-    m_aptF[2].y += dy;
-    m_aptF[1].y += dy;
-    m_aptF[3].x += dx;
+    m_aptF[2] = newPos;
+    m_aptF[3].x = m_aptF[2].x;
+    m_aptF[1].y = m_aptF[2].y;
     break;
   case 5:
-    m_aptF[2].x += dx;
-    m_aptF[3].x += dx;
+    m_aptF[2].x = newPos.x;
+    m_aptF[3].x = newPos.x;
     break;
   case 6:
-    m_aptF[3].x += dx;
-    m_aptF[3].y += dy;
-    m_aptF[2].x += dx;
-    m_aptF[0].y += dy;
+    m_aptF[3] = newPos;
+    m_aptF[2].x = m_aptF[3].x;
+    m_aptF[0].y = m_aptF[3].y;
     break;
   case 7:
-    m_aptF[0].y += dy;
-    m_aptF[3].y += dy;
+    m_aptF[3].y = newPos.y;
+    m_aptF[0].y = newPos.y;
     break;
   }
 

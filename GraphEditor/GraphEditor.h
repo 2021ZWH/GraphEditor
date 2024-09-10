@@ -13,6 +13,7 @@ public:
   ~GraphEditor();
   void init();
   void destroy();
+  bool translateAccelator(MSG *lpMsg);
 private:
   static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
   LRESULT CALLBACK runProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -26,6 +27,8 @@ private:
   void onUndo();
   void onRedo();
 private:
+  HMENU m_hMenu = NULL;
+  HACCEL m_hAccel = NULL;
   ToolBar *m_ptoolBar = nullptr;
   GraphView *m_pGView = nullptr;
 

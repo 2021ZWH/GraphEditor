@@ -139,6 +139,15 @@ public:
     return _array[index];
   }
 
+  const T& operator[](size_t index) const
+  {
+    if(index >= _size || index < 0)
+    {
+      abort();
+    }
+    return _array[index];
+  }
+
   void clear()
   {
     _size = 0;

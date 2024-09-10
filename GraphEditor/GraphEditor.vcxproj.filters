@@ -96,6 +96,12 @@
     <ClInclude Include="GraphCoder.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GraphCommand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphCommandManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -153,6 +159,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GraphCoder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphCommand.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphCommandManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

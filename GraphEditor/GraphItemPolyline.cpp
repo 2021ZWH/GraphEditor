@@ -90,13 +90,12 @@ bool GraphItemPolyline::isRectCrossShape(const RectF& rectf)
   return false;
 }
 
-bool GraphItemPolyline::shapeResize(double dx, double dy, ControlHandler* handler)
+bool GraphItemPolyline::shapeResizeTo(const PointF &newPos, ControlHandler* handler)
 {
   if(handler->getOwnerShape() != this) return false;
   
   int id = handler->getId();
-  m_linePos[id].x += dx;
-  m_linePos[id].y += dy;
+  m_linePos[id] = newPos;
   m_ctrHandlers[id]->setPos(m_linePos[id]);
   return true;
 }

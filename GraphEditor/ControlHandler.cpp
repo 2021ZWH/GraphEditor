@@ -72,6 +72,12 @@ void ControlHandler::setPos(const PointF& pos)
   m_ctrPos = pos;
 }
 
+PointF ControlHandler::getPos() const
+{
+  return m_ctrPos;
+}
+
+
 int ControlHandler::getId() const
 {
   return this->m_id;

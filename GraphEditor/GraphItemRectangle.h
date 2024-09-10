@@ -16,7 +16,7 @@ public:
   
   bool isPointUpShape(const PointF& pos) override;
   bool isRectCrossShape(const RectF& rectf) override;
-  bool shapeResize(double dx,double dy, ControlHandler* handler) override;
+  bool shapeResizeTo(const PointF &newPos, ControlHandler* handler) override;
 private:
   void updateCtrHandler();
 private:

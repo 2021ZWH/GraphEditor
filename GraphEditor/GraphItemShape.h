@@ -29,7 +29,7 @@ public:
   virtual void move(double dx, double dy) = 0;
   virtual bool isPointUpShape(const PointF& pos) = 0;
   virtual bool isRectCrossShape(const RectF& rectf) = 0;
-  virtual bool shapeResize(double dx,double dy, ControlHandler* handler) = 0;
+  virtual bool shapeResizeTo(const PointF &newPos, ControlHandler* handler) = 0;
   virtual void addPos(const PointF& pos);
   virtual void SetSelectHandler(ControlHandler* handler);
   virtual void resetSelect();
@@ -41,6 +41,9 @@ public:
   virtual UINT getLineWidth() const;
   virtual COLORREF getLineColor() const;
   virtual COLORREF getFillColor() const;
+
+  virtual bool isVisible() const;
+  virtual void setVisible(bool flag);
 protected:
   virtual void clearCtrHandler();
 protected:
@@ -52,6 +55,8 @@ protected:
   COLORREF m_lineColor = BGR_BLACK;
   COLORREF m_fillColor = BGR_WHITE;
   bool m_fTransparent = true;
+
+  bool m_fVisible = true;
   
   
 };

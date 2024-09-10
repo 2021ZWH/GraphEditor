@@ -12,6 +12,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   MSG msg = { 0 };
   while (GetMessage(&msg, NULL, 0, 0))
   {
+    if(!GE.translateAccelator(&msg))
     TranslateMessage(&msg);
     DispatchMessageW(&msg);
   }

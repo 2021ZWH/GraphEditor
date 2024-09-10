@@ -132,6 +132,8 @@
     <ClInclude Include="ControlHandler.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphCoder.h" />
+    <ClInclude Include="GraphCommand.h" />
+    <ClInclude Include="GraphCommandManager.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="GraphEditor_def.h" />
     <ClInclude Include="GraphFile.h" />
@@ -159,6 +161,8 @@
     <ClCompile Include="ClipboardManager.cpp" />
     <ClCompile Include="ControlHandler.cpp" />
     <ClCompile Include="GraphCoder.cpp" />
+    <ClCompile Include="GraphCommand.cpp" />
+    <ClCompile Include="GraphCommandManager.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="GraphFile.cpp" />
     <ClCompile Include="GraphItemCircle.cpp" />

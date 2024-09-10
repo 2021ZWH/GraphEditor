@@ -115,3 +115,13 @@ COLORREF GraphItemShape::getFillColor() const
 {
   return m_fillColor;
 }
+
+bool GraphItemShape::isVisible() const
+{
+  return m_fVisible;
+}
+
+void GraphItemShape::setVisible(bool flag)
+{
+  m_fVisible = flag;
+}

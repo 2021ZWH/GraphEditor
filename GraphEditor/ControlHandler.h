@@ -28,6 +28,7 @@ public:
   void move(double dx, double dy);
   bool isPointInHandler(const PointF &pos);
   void setPos(const PointF& pos);
+  PointF getPos() const;
   void SetSelect(bool fSelect);
   bool isSelect() const;
   int getId() const;
