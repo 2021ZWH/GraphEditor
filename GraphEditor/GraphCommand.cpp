@@ -152,3 +152,36 @@ void GraphHandlerCommand::redo()
   
   m_pSelectMger->addShape(pShape);
 }
+
+// GraphChangePropertyCommand
+GraphChangePropertyCommand::
+GraphChangePropertyCommand(const Vector<GraphItemShape*>& shapeVec, 
+                          const Vector<ShapeProperty>& properVec)
+{
+  m_shapeVec.resize(shapeVec.size());
+  m_oldPropertyVec.resize(properVec.size());
+  for(int i = 0; i < shapeVec.size(); i++)
+  {
+    m_shapeVec[i] = shapeVec[i];
+    m_oldPropertyVec[i] = properVec[i];
+  }
+  m_newShapeProperty = shapeVec[0]->getProperty();
+}
+
+GraphChangePropertyCommand::~GraphChangePropertyCommand()
+{
+
+}
+
+void GraphChangePropertyCommand::undo()
+{
+  for(int i = 0; i < m_shapeVec.size(); i++)
+    m_shapeVec[i]->setProperty(m_oldPropertyVec[i]);
+}
+
+void GraphChangePropertyCommand::redo()
+{
+  for(int i = 0; i < m_shapeVec.size(); i++)
+    m_shapeVec[i]->setProperty(m_newShapeProperty);
+}
+

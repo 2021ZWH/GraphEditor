@@ -102,6 +102,9 @@
     <ClInclude Include="GraphCommandManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ShapeBoardDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -167,6 +170,9 @@
     <ClCompile Include="GraphCommandManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ShapeBoardDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphEditor.rc">
@@ -196,6 +202,42 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="ico\Circle.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\Dashboard.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\icon1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\linewidth0.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\linewidth1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\linewidth2.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\black.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\blue.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\green.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\red.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\transparent.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\white.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="ico\yellow.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

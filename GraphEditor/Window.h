@@ -14,26 +14,31 @@ public:
     m_hParent = hParent;
     m_hIns = hIns;
   }
+
   virtual int getWidth() const
   {
     RECT rect;
     GetClientRect(m_hWnd, &rect);
     return rect.right;
   }
+
   virtual int getHeight() const
   {
     RECT rect;
     GetClientRect(m_hWnd, &rect);
     return rect.bottom;
   }
+
   HWND getHWnd() const
   {
     return m_hWnd;
   }
+
   HWND getHParent() const
   {
     return m_hParent;
   }
+
   HINSTANCE getHInst() const
   {
     return m_hIns;

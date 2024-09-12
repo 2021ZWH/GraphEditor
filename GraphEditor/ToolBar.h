@@ -13,7 +13,8 @@ enum IDM_TBBUTTON {
   BT_BEZIER,
   BT_RECTANGLE,
   BT_CIRCLE,
-  BT_ELLIPTIC
+  BT_ELLIPTIC,
+  BT_DASHBOARD
 };
 
 class ToolBar : public Window

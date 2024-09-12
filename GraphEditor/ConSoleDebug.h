@@ -401,22 +401,7 @@ static void ConsoleDebugMessage(UINT message)
 static void ConsoleDebug(int num)
 {
   TCHAR pTchar[100];
-  int cnt = 0;
-  bool flag = false;
-  for (int i = 1e9; i > 0; i /= 10)
-  {
-    if(num / i)
-    {
-      pTchar[cnt++] = (num / i + '0');
-      num %= i;
-      flag = true;
-    }
-    else if(flag)
-    {
-      pTchar[cnt++] = '0';
-
-    }
-  }
-  ConsoleDebug(pTchar, cnt);
+  wsprintf(pTchar, L"%d", num);
+  ConsoleDebug(pTchar, lstrlen(pTchar));
 }
 #endif

@@ -1,20 +1,31 @@
 #ifndef GRAPH_EDITOR_DEF_H
 #define GRAPH_EDITOR_DEF_H
 
-#define BGR_BLUE       0x00FF0000  // 颜色的一些宏
 #define BGR_RED        0x000000FF
 #define BGR_GREEN      0x0000FF00
-#define BGR_BLUE       0x00FF0000
+#define BGR_BLUE       RGB(0,0,255)
 #define BGR_BLACK      0x00000000
 #define BGR_WHITE      0x00FFFFFF
+#define BGR_YELLOW     0x0000FFFF
 #define BGR_LIGHTBLUE  0x00D2923F
 
 #define BGDCOLOR          (0x00c8c8c8)
 #define MAX_SCENE_WIDTH   20000
 #define MAX_SCENE_HEIGHT  20000
 
+#define GE_BASE           (WM_USER)
+#define GE_SB_DATACHANGE  (GE_BASE+1)
+#define GE_GV_FOCUSCHANGE (GE_BASE+2)
 
 #include <math.h>
+
+struct ShapeProperty
+{
+  UINT lineWidth = 1;
+  COLORREF lineColor = BGR_BLACK;
+  COLORREF fillColor = BGR_WHITE;
+  bool fTransparent = true;
+};
 
 struct PointF
 {

@@ -1,4 +1,5 @@
 #include "GraphEditor.h"
+#include "GraphEditor_def.h"
 #include "resource.h"
 #include "ConSoleDebug.h"
 
@@ -11,6 +12,7 @@ GraphEditor::~GraphEditor()
 {
   delete m_pGView;
   delete m_ptoolBar;
+  delete m_pSBDlg;
   destroy();
 }
 
@@ -42,6 +44,7 @@ void GraphEditor::init()
   
   m_ptoolBar->init();
   m_pGView->init();
+  m_pSBDlg->init();
 }
 
 void GraphEditor::destroy()
@@ -65,6 +68,7 @@ LRESULT CALLBACK GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
       GE->m_hWnd = hwnd;
       GE->m_ptoolBar = new ToolBar(GE->m_hIns, hwnd);
       GE->m_pGView = new GraphView(GE->m_hIns, hwnd);
+      GE->m_pSBDlg = new ShapeBoardDlg(GE->m_hIns, hwnd);
 
       SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(GE));
       break;
@@ -78,8 +82,8 @@ LRESULT CALLBACK GraphEditor::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 
 LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  /*ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);*/
+  ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);
   switch (uMsg)
   {
   case WM_COMMAND:
@@ -88,6 +92,13 @@ LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   case WM_SIZE:
     onSize(wParam,lParam);
     break;
+  case GE_SB_DATACHANGE:
+  {
+    ShapeProperty shapeProperty = m_pSBDlg->getShapeProperty();
+    m_pGView->setShapeProperty(shapeProperty);
+    break;
+  }
+    
   case WM_DESTROY:
     PostQuitMessage(0);
     break;
@@ -117,8 +128,8 @@ void GraphEditor::onSize(WPARAM wParam, LPARAM lParam)
 
 void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
 {
-  ConsoleDebug((int)(wParam));
-  ConsoleDebug(L"\n", 1);
+ /* ConsoleDebug((int)(wParam));
+  ConsoleDebug(L"\n", 1);*/
   switch(LOWORD(wParam))
   {
   case BT_EDITMODE:
@@ -141,6 +152,9 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
     break;
   case BT_RECTANGLE:
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);
+    break;
+  case BT_DASHBOARD:
+    m_pSBDlg->showDialog(true);
     break;
   case IDM_SAVE:
     onSave();

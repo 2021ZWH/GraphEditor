@@ -13,23 +13,23 @@ Vector<TCHAR> GraphItemShape::toText()
 
   TCHAR buffer[100];
   memset(buffer, 0, sizeof buffer);
-
-  _itow_s(m_lineWidth, buffer, 10); // 线宽
+  
+  _itow_s(m_shapeProper.lineWidth, buffer, 10); // 线宽
   for(int i = 0; i < lstrlen(buffer); i++)
     vec.push_back(buffer[i]);
   vec.push_back(' ');
 
-  _itow_s(m_lineColor, buffer, 10); // 线色
+  _itow_s(m_shapeProper.lineColor, buffer, 10); // 线色
   for(int i = 0; i < lstrlen(buffer); i++)
     vec.push_back(buffer[i]);
   vec.push_back(' ');
 
-  _itow_s(m_fillColor, buffer, 10); // 填充色
+  _itow_s(m_shapeProper.fillColor, buffer, 10); // 填充色
   for(int i = 0; i < lstrlen(buffer); i++)
     vec.push_back(buffer[i]);
   vec.push_back(' ');
 
-  _itow_s(m_fTransparent, buffer, 10); // 是否透明
+  _itow_s(m_shapeProper.fTransparent, buffer, 10); // 是否透明
   for(int i = 0; i < lstrlen(buffer); i++)
     vec.push_back(buffer[i]);
   vec.push_back(' ');
@@ -81,39 +81,14 @@ void GraphItemShape::resetSelect()
   m_selectHandler = nullptr;
 }
 
-void GraphItemShape::setLineWidth(UINT width)
+void GraphItemShape::setProperty(const ShapeProperty& property)
 {
-  if(width >= 1) m_lineWidth = width;
+  m_shapeProper = property;
 }
 
-void GraphItemShape::setLineColor(COLORREF color)
+ShapeProperty GraphItemShape::getProperty() const
 {
-  m_lineColor = color;
-}
-
-void GraphItemShape::setFillColor(COLORREF color)
-{
-  m_fillColor = color;
-}
-
-void GraphItemShape::setTransParent(bool flag)
-{
-  m_fTransparent = flag;
-}
-
-UINT GraphItemShape::getLineWidth() const
-{
-  return m_lineWidth;
-}
-
-COLORREF GraphItemShape::getLineColor() const
-{
-  return m_lineColor;
-}
-
-COLORREF GraphItemShape::getFillColor() const
-{
-  return m_fillColor;
+  return m_shapeProper;
 }
 
 bool GraphItemShape::isVisible() const

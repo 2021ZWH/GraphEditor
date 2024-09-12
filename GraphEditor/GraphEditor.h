@@ -5,7 +5,7 @@
 #include "Window.h"
 #include "GraphView.h"
 #include "ToolBar.h"
-
+#include "ShapeBoardDlg.h"
 class GraphEditor : public Window
 {
 public:
@@ -31,6 +31,7 @@ private:
   HACCEL m_hAccel = NULL;
   ToolBar *m_ptoolBar = nullptr;
   GraphView *m_pGView = nullptr;
+  ShapeBoardDlg* m_pSBDlg = nullptr;
 
   TCHAR m_szFilename[200];
 };

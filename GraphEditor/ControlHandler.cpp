@@ -77,7 +77,6 @@ PointF ControlHandler::getPos() const
   return m_ctrPos;
 }
 
-
 int ControlHandler::getId() const
 {
   return this->m_id;
@@ -100,7 +99,7 @@ HCURSOR ControlHandler::getCursor()
 
 HandlerType ControlHandler::getHandlerType()const
 {
-  return this->getHandlerType();
+  return m_type;
 }
 
 GraphItemShape* ControlHandler::getOwnerShape()

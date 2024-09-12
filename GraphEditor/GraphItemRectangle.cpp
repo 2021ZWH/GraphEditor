@@ -59,20 +59,24 @@ void GraphItemRectangle::drawShape(HDC hdc,double xoff, double yoff)
   rect.bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
   
   HBRUSH hbru;
-  if(m_fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
-  else hbru = CreateSolidBrush(m_fillColor);
-
-  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
-  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+  if(m_shapeProper.fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
+  else hbru = CreateSolidBrush(m_shapeProper.fillColor);
   HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
 
-  Rectangle(hdc,rect.left, rect.top, rect.right, rect.bottom);
+  HPEN hpen;
+  if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
+  else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
+  HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
   
+  Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
+
   SelectObject(hdc, oldBru);
   SelectObject(hdc, hpen);
 
-  if(!m_fTransparent) DeleteObject(hbru);
-  DeleteObject(hpen);
+  if(!m_shapeProper.fTransparent) 
+    DeleteObject(hbru);
+  if(m_shapeProper.lineWidth)
+    DeleteObject(hpen);
 }
 
 void GraphItemRectangle::move(double dx, double dy)
@@ -101,15 +105,24 @@ bool GraphItemRectangle::isPointUpShape(const PointF& pos)
   rect.top = min(m_aptF[0].y, m_aptF[2].y);
   rect.bottom = max(m_aptF[0].y, m_aptF[2].y);
   
-  if(fabs(rect.left - x) < 2 || fabs(rect.right - x) < 2)
+  if(m_shapeProper.fTransparent)
   {
-    return y <= rect.bottom && y >= rect.top;
-  }
+    if(fabs(rect.left - x) < 2 || fabs(rect.right - x) < 2)
+    {
+      return y <= rect.bottom && y >= rect.top;
+    }
 
-  if(fabs(rect.bottom - y) < 2 || fabs(rect.top - y) < 2)
-  {
-    return x <= rect.right && x >= rect.left;
+    if(fabs(rect.bottom - y) < 2 || fabs(rect.top - y) < 2)
+    {
+      return x <= rect.right && x >= rect.left;
+    }
   }
+  else
+  {
+    return x >= rect.left && x <= rect.right
+      && y >= rect.top && y <= rect.bottom;
+  }
+  
 
   return false;
 }

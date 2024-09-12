@@ -46,13 +46,16 @@ void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
     apt[i-1].y = (m_aptf[i].y - yoff + 0.5);
   }
 
-  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN hpen;
+  if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
+  else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
 
   PolyBezier(hdc, apt, m_aptf.size() - 2);
 
   SelectObject(hdc, oldPen);
-  DeleteObject(hpen);
+  if(m_shapeProper.lineWidth)
+    DeleteObject(hpen);
 
   delete[] apt;
 }

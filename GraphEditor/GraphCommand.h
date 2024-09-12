@@ -74,5 +74,20 @@ private:
 
 };
 
+class GraphChangePropertyCommand
+  :public GraphCommand
+{
+public:
+  GraphChangePropertyCommand(const Vector<GraphItemShape*>& shapeVec, 
+                            const Vector<ShapeProperty> &properVec);
+  ~GraphChangePropertyCommand();
+  void undo()override;
+  void redo()override;
+private:
+  Vector<GraphItemShape*> m_shapeVec;
+  ShapeProperty m_newShapeProperty;
+  Vector<ShapeProperty> m_oldPropertyVec;
+  
+};
 #endif // GRAPH_COMMAND_H
 

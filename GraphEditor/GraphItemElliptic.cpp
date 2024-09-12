@@ -59,10 +59,12 @@ void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
   int bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
 
   HBRUSH hbru;
-  if(m_fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
-  else hbru = CreateSolidBrush(m_fillColor);
+  if(m_shapeProper.fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
+  else hbru = CreateSolidBrush(m_shapeProper.fillColor);
 
-  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN hpen;
+  if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
+  else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
   HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
 
@@ -71,8 +73,10 @@ void GraphItemElliptic::drawShape(HDC hdc, double xoff, double yoff)
   SelectObject(hdc, oldBru);
   SelectObject(hdc, hpen);
 
-  if(!m_fTransparent) DeleteObject(hbru);
-  DeleteObject(hpen);
+  if(!m_shapeProper.fTransparent)
+    DeleteObject(hbru);
+  if(m_shapeProper.lineWidth)
+    DeleteObject(hpen);
 }
 
 void GraphItemElliptic::move(double dx, double dy)
@@ -94,7 +98,11 @@ bool GraphItemElliptic::isPointUpShape(const PointF& pos)
   p0.y = (m_aptF[0].y + m_aptF[2].y) / 2;
 
   double val = pow(pos.x - p0.x, 2) / pow(a, 2) + pow(pos.y - p0.y,2) / pow(b, 2);
-  if(fabs(val - 1) <= 0.05) return true;
+  
+  if(m_shapeProper.fTransparent)
+    return fabs(val - 1) <= 0.05;
+  else
+    return val - 1 <= 0.05;
 
   return false;
 }

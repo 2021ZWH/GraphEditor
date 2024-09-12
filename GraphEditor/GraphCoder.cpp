@@ -130,10 +130,7 @@ int GraphCoder::parseLine(TCHAR* szData, int begin, GraphItemShape** shape)
 
 	if(pItemShape)
 	{
-		pItemShape->setLineWidth(desData[1]);
-		pItemShape->setLineColor(desData[2]);
-		pItemShape->setFillColor(desData[3]);
-		pItemShape->setTransParent(desData[4]);
+		pItemShape->setProperty({ desData[1],desData[2] ,desData[3] ,(bool)desData[4] });
 		*shape = pItemShape;
 	}
 

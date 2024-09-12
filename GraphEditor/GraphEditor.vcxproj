@@ -150,6 +150,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScrollBarManager.h" />
     <ClInclude Include="SelectShapeManager.h" />
+    <ClInclude Include="ShapeBoardDlg.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ToolBar.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="ScrollBarManager.cpp" />
     <ClCompile Include="SelectShapeManager.cpp" />
+    <ClCompile Include="ShapeBoardDlg.cpp" />
     <ClCompile Include="ToolBar.cpp" />
     <ClCompile Include="ToolManager.cpp" />
     <ClCompile Include="winmain.cpp" />
@@ -185,13 +187,25 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico\Bezier.ico" />
+    <Image Include="ico\black.ico" />
+    <Image Include="ico\blue.ico" />
     <Image Include="ico\Circle.ico" />
     <Image Include="ico\Cursor.ico" />
     <Image Include="ico\Curve.ico" />
+    <Image Include="ico\Dashboard.ico" />
     <Image Include="ico\elliptic.ico" />
+    <Image Include="ico\green.ico" />
+    <Image Include="ico\icon1.ico" />
     <Image Include="ico\Line.ico" />
+    <Image Include="ico\linewidth0.ico" />
+    <Image Include="ico\linewidth1.ico" />
+    <Image Include="ico\linewidth2.ico" />
     <Image Include="ico\Polyline.ico" />
     <Image Include="ico\Rectangle.ico" />
+    <Image Include="ico\red.ico" />
+    <Image Include="ico\transparent.ico" />
+    <Image Include="ico\white.ico" />
+    <Image Include="ico\yellow.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cur\Cross.cur" />

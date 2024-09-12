@@ -99,12 +99,22 @@ bool GraphView::paste()
 
 bool GraphView::undo()
 {
+  if(isDrawing)
+    return false;
   return m_pGhMger->undo();
 }
 
 bool GraphView::redo()
 {
+  if(isDrawing)
+    return false;
   return m_pGhMger->redo();
+}
+
+bool GraphView::setShapeProperty(const ShapeProperty& property)
+{
+  m_shapeProperty = property;
+  return m_pGhMger->setShapeProper(property);
 }
 
 PointF GraphView::mapToScene(const POINT &viewPos)
@@ -172,8 +182,8 @@ LRESULT CALLBACK GraphView::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 LRESULT CALLBACK GraphView::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  ConsoleDebugMessage(uMsg);
-  ConsoleDebug(L"\n", 1);
+  /*ConsoleDebugMessage(uMsg);
+  ConsoleDebug(L"\n", 1);*/
   switch (uMsg)
   {
   case WM_KEYDOWN:
@@ -241,7 +251,7 @@ void GraphView::onPaint()
   int mapH = yClient / m_scale;
 
   HDC hdcMem = CreateCompatibleDC(hdc);
-  HBITMAP hbmMem = CreateCompatibleBitmap(hdcMem, mapW, mapH);
+  HBITMAP hbmMem = CreateCompatibleBitmap(hdc, mapW, mapH);
   SelectObject(hdcMem, hbmMem);
   RECT rec = { 0,0,mapW,mapH };
 
@@ -259,7 +269,7 @@ void GraphView::onPaint()
   
   StretchBlt(hdc, 0, 0, xClient, yClient,
              hdcMem, 0, 0, mapW, mapH, SRCCOPY);
-  //BitBlt(hdc, x * boardW, y * boardH, min(xClient, (x + 1) * boardW), min(yClient, (y + 1) * boardH), hdcMem, 0, 0, SRCCOPY);
+ // BitBlt(hdc, 0, 0, xClient, yClient, hdcMem, 0, 0, SRCCOPY);
 
   DeleteObject(hbmMem);
   DeleteDC(hdcMem);
@@ -585,6 +595,7 @@ void GraphView::endDraw(const POINT& pos)
 
   if(pItemShape)
   {
+    pItemShape->setProperty(m_shapeProperty);
     m_pGhMger->addShape(pItemShape);
     InvalidateRect(m_hWnd, NULL, false);
   }

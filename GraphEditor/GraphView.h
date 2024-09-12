@@ -24,6 +24,7 @@ public:
   bool paste();
   bool undo();
   bool redo();
+  bool setShapeProperty(const ShapeProperty &property);
   PointF mapToScene(const POINT &viewPos);
   POINT mapToView(const PointF &scenePos);
 private:
@@ -54,6 +55,7 @@ private:
   PointF m_startPos;
   PointF m_endPos;
   PointF m_aptF[5];
+  ShapeProperty m_shapeProperty;
   bool isDrawing = false;
 
 };

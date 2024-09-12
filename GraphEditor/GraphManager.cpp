@@ -60,8 +60,9 @@ void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
   // 在00处画一个举行
   double sx = 0 - rectf.left;
   double sy = 0 - rectf.top;
+ 
   Rectangle(hdc, sx, sy, sx + 800, sy + 800);//画图
-
+ 
   for(int i = 0; i < m_shapeVec.size(); i++)
   {
     if(!m_shapeVec[i]->isVisible())
@@ -199,6 +200,26 @@ bool GraphManager::redo()
   m_pCmdMger->redo();
   freshView();
   return true;
+}
+
+bool GraphManager::setShapeProper(const ShapeProperty& property)
+{
+  if(!isSelect())
+    return false;
+
+  Vector<GraphItemShape*> shapeVec = m_selectMger.getShape();
+  Vector<ShapeProperty> properVec;
+  properVec.resize(shapeVec.size());
+  for(int i = 0; i < shapeVec.size(); i++)
+  {
+    properVec[i] = shapeVec[i]->getProperty();
+    shapeVec[i]->setProperty(property);
+  }
+  GraphCommand* cmd = new GraphChangePropertyCommand(shapeVec, properVec);
+  m_pCmdMger->addCommand(cmd);
+  freshView();
+  return true;
+  
 }
 
 bool GraphManager::isSelect() const
@@ -354,7 +375,7 @@ bool GraphManager::setSelectShapeByPos(const PointF& pos)
   if(isSelect()) ret = true;
   m_selectMger.clearSelect();
 
-  for(int i = 0; i < m_shapeVec.size(); i++)  // 若选中图形，添加
+  for(int i = m_shapeVec.size() - 1; i >= 0; i--)  // 倒序遍历，选中最上层
   {
     if(!m_shapeVec[i]->isVisible()) continue;
     if(m_shapeVec[i]->isPointUpShape(pos))

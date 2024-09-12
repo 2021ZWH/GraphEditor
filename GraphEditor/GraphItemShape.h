@@ -34,13 +34,8 @@ public:
   virtual void SetSelectHandler(ControlHandler* handler);
   virtual void resetSelect();
 
-  virtual void setLineWidth(UINT width);
-  virtual void setLineColor(COLORREF color);
-  virtual void setFillColor(COLORREF color);
-  virtual void setTransParent(bool flag);
-  virtual UINT getLineWidth() const;
-  virtual COLORREF getLineColor() const;
-  virtual COLORREF getFillColor() const;
+  virtual void setProperty(const ShapeProperty& property);
+  virtual ShapeProperty getProperty() const;
 
   virtual bool isVisible() const;
   virtual void setVisible(bool flag);
@@ -51,10 +46,7 @@ protected:
   ControlHandler* m_selectHandler = nullptr;
 
   ShapeType m_shapeType = SHAPE_UNKNOWN;
-  UINT m_lineWidth = 1;
-  COLORREF m_lineColor = BGR_BLACK;
-  COLORREF m_fillColor = BGR_WHITE;
-  bool m_fTransparent = true;
+  ShapeProperty m_shapeProper;
 
   bool m_fVisible = true;
   

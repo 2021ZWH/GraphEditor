@@ -40,7 +40,9 @@ void GraphItemLine::drawShape(HDC hdc, double xoff, double yoff)
   double ex = m_posB.x - xoff;
   double ey = m_posB.y - yoff;
 
-  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN hpen;
+  if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
+  else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
   
   MoveToEx(hdc, sx, sy, &pos);
@@ -48,7 +50,9 @@ void GraphItemLine::drawShape(HDC hdc, double xoff, double yoff)
 
   MoveToEx(hdc, pos.x, pos.y,NULL);
   SelectObject(hdc, oldPen);
-  DeleteObject(hpen);
+
+  if(m_shapeProper.lineWidth)
+    DeleteObject(hpen);
 }
 
 void GraphItemLine::move(double dx, double dy)

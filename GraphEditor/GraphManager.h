@@ -33,6 +33,7 @@ public:
   bool paste();
   bool undo();
   bool redo();
+  bool setShapeProper(const ShapeProperty& property);
 
   bool isSelect() const;
   void addShape(GraphItemShape* shape);

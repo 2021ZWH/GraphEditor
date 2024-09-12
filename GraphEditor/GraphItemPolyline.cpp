@@ -36,7 +36,9 @@ Vector<TCHAR> GraphItemPolyline::toText()
 
 void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)
 {
-  HPEN hpen = CreatePen(PS_SOLID, m_lineWidth, m_lineColor);
+  HPEN hpen;
+  if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
+  else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
 
   for(int i = 0; i < m_linePos.size() - 1; i++)
@@ -51,7 +53,8 @@ void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)
   }
 
   SelectObject(hdc, oldPen);
-  DeleteObject(hpen);
+  if(m_shapeProper.lineWidth)
+    DeleteObject(hpen);
 }
 
 void GraphItemPolyline::move(double dx, double dy)
