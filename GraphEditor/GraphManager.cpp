@@ -1,9 +1,11 @@
+
 #include "GraphManager.h"
 #include "GraphCoder.h"
-#include "ClipboardManager.h"
 
 GraphManager::GraphManager(HWND hwnd)
-  :m_hWnd(hwnd),m_pCmdMger(new GraphCommandManager)
+  :m_hWnd(hwnd),
+  m_pCmdMger(new GraphCommandManager),
+  m_pClipboard(new ClipboardManager(hwnd))
 {
 
 }
@@ -12,6 +14,7 @@ GraphManager::~GraphManager()
 {
   clear();
   delete m_pCmdMger;
+  delete m_pClipboard;
   
 }
 
@@ -139,8 +142,8 @@ bool GraphManager::copy()
   if(gc.code(selectShape, &szData) != 0)
     return false;
 
-  ClipboardManager clibMger(m_hWnd);
-  bool ret = clibMger.setText(szData);
+  
+  bool ret = m_pClipboard->setText(szData);
 
   delete[] szData;
   return ret;
@@ -148,15 +151,18 @@ bool GraphManager::copy()
 
 bool GraphManager::cut()
 {
+  if(copy())
+  {
+    delSelectShape();
+    return true;
+  }
 
   return false;
 }
 
 bool GraphManager::paste()
 {
-  ClipboardManager clipMger(m_hWnd);
-
-  TCHAR* szData = clipMger.getText();
+  TCHAR* szData = m_pClipboard->getText();
 
   if(szData == nullptr)
     false;
@@ -207,14 +213,21 @@ bool GraphManager::setShapeProper(const ShapeProperty& property)
   if(!isSelect())
     return false;
 
+  bool flag = false;
   Vector<GraphItemShape*> shapeVec = m_selectMger.getShape();
   Vector<ShapeProperty> properVec;
   properVec.resize(shapeVec.size());
   for(int i = 0; i < shapeVec.size(); i++)
   {
     properVec[i] = shapeVec[i]->getProperty();
-    shapeVec[i]->setProperty(property);
+    if(!(properVec[i] == property))
+    {
+      shapeVec[i]->setProperty(property);
+      flag = true;
+    }
+   
   }
+  if(!flag) return false;
   GraphCommand* cmd = new GraphChangePropertyCommand(shapeVec, properVec);
   m_pCmdMger->addCommand(cmd);
   freshView();

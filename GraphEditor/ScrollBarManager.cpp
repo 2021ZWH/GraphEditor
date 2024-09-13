@@ -113,8 +113,9 @@ void ScrollBarManager::scroll(int dx, int dy)
   int xoff = setHPos(hPos) * m_unitW;
   int yoff = setVPos(vPos) * m_unitH;
   if(xoff == 0 && yoff == 0) return;
-  ScrollWindow(m_hWnd, -xoff, -yoff, NULL, NULL);
-  UpdateWindow(m_hWnd);
+  /*ScrollWindow(m_hWnd, -xoff, -yoff, NULL, NULL);
+  UpdateWindow(m_hWnd);*/
+  InvalidateRect(m_hWnd, NULL, false);
 }
 
 void ScrollBarManager::scrollToPos(const POINT& pos)

@@ -7,7 +7,10 @@ ToolBar::ToolBar(HINSTANCE hIns, HWND hParent)
 }
 
 ToolBar::~ToolBar()
-{
+{ 
+  for(int i = 0; i < m_iconVec.size(); i++)
+    DeleteObject(m_iconVec[i]);
+  ImageList_Destroy(m_imgList);
   destroy();
 }
 
@@ -39,6 +42,7 @@ void ToolBar::init()
   for(int i = 0; i < 8; i++)
   {
     HICON hicon = (HICON)LoadIcon(m_hIns, MAKEINTRESOURCE(icoId[i]));
+    m_iconVec.push_back(hicon);
     iIcon[i] = ImageList_AddIcon(m_imgList, hicon);
   }
  

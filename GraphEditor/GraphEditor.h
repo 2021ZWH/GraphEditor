@@ -26,6 +26,8 @@ private:
   void onPaste();
   void onUndo();
   void onRedo();
+
+  void setTitle();
 private:
   HMENU m_hMenu = NULL;
   HACCEL m_hAccel = NULL;
@@ -33,7 +35,9 @@ private:
   GraphView *m_pGView = nullptr;
   ShapeBoardDlg* m_pSBDlg = nullptr;
 
-  TCHAR m_szFilename[200];
+  TCHAR m_szFilename[MAX_PATH] = L"Untitled";
+  bool unSaved = true;
+
 };
 
 

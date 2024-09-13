@@ -14,6 +14,7 @@
 #include "SelectShapeManager.h"
 #include "GraphFile.h"
 #include "GraphCommandManager.h"
+#include "ClipboardManager.h"
 
 class GraphManager 
 {
@@ -56,6 +57,7 @@ private:
   SelectShapeManager m_selectMger;
   Vector<GraphItemShape*> m_shapeVec;
 
+  ClipboardManager* m_pClipboard = nullptr;
   GraphCommandManager* m_pCmdMger = nullptr;
   PointF m_mouseBeginPos;
   PointF m_mouseEndPos;

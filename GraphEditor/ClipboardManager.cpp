@@ -13,7 +13,7 @@ ClipboardManager::~ClipboardManager()
 
 TCHAR* ClipboardManager::getText()
 {
-  if(OpenClipboard(m_hWnd))
+  /*if(OpenClipboard(m_hWnd))
   {
     HANDLE hData = GetClipboardData(CF_UNICODETEXT);
     if(hData == NULL)
@@ -36,14 +36,22 @@ TCHAR* ClipboardManager::getText()
     GlobalUnlock(hData);
     CloseClipboard();
     return szText;
+  }*/
+  if(m_clipData.size())
+  {
+    TCHAR* szText = new TCHAR[m_clipData.size()+1];
+    if(szText == nullptr) return nullptr;
+    for(int i = 0; i < m_clipData.size(); i++)
+      szText[i] = m_clipData[i];
+    szText[m_clipData.size()] = NULL;
+    return szText;
   }
-
   return nullptr;
 }
 
 bool ClipboardManager::setText(const TCHAR* szText)
 {
-  if(OpenClipboard(m_hWnd)) {
+  /*if(OpenClipboard(m_hWnd)) {
     EmptyClipboard();
     int szTextLen = lstrlen(szText);
     HANDLE hData = GlobalAlloc(GMEM_MOVEABLE, (szTextLen + 1) * sizeof(TCHAR));
@@ -66,6 +74,13 @@ bool ClipboardManager::setText(const TCHAR* szText)
     GlobalUnlock(hData);
     CloseClipboard();
     return true;
-  }
-  return false;
+  }*/
+
+  int szTextLen = lstrlen(szText);
+  if(!szTextLen) return false;
+
+  m_clipData.resize(szTextLen);
+  for(int i = 0; i < szTextLen; i++)
+    m_clipData[i] = szText[i];
+  return true;
 }

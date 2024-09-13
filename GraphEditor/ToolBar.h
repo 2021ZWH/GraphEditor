@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include "Window.h"
+#include "Vector.h"
+
 #pragma comment(lib ,"Comctl32.lib")
 
 enum IDM_TBBUTTON {
@@ -27,6 +29,7 @@ public:
   void resize();
 private:
   HIMAGELIST m_imgList = nullptr;
+  Vector<HICON> m_iconVec;
 
 };
 #endif// TOOL_BAR_H

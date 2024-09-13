@@ -13,6 +13,7 @@ public:
   ShapeBoardDlg(HINSTANCE hIns, HWND hParent);
   ~ShapeBoardDlg();
   void init();
+  void destroy();
   void showDialog(bool flag);
   void setShapeProperty(const ShapeProperty &property);
   ShapeProperty getShapeProperty() const;

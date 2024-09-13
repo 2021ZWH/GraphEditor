@@ -207,9 +207,6 @@
     <Image Include="ico\Dashboard.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="ico\icon1.ico">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="ico\linewidth0.ico">
       <Filter>资源文件</Filter>
     </Image>

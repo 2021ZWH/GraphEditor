@@ -45,6 +45,7 @@ void GraphEditor::init()
   m_ptoolBar->init();
   m_pGView->init();
   m_pSBDlg->init();
+  setTitle();
 }
 
 void GraphEditor::destroy()
@@ -195,9 +196,13 @@ void GraphEditor::onSave()
 
   if(GetSaveFileName(&opfn) != 0)
   {
-    bool fSuccess = m_pGView->save(strFilename);
-    if(fSuccess)
-      MessageBox(m_hWnd, L"ok", NULL, MB_OK);
+    bool ret = m_pGView->save(strFilename);
+    if(ret)
+    {
+      unSaved = false;
+      memcpy(m_szFilename, strFilename, lstrlen(strFilename)*sizeof(TCHAR));
+      setTitle();
+    }
   }
 }
 
@@ -217,6 +222,12 @@ void GraphEditor::onOpen()
   if(GetOpenFileName(&opfn) != 0)
   {
     bool fSuccess = m_pGView->open(strFilename);
+    if(fSuccess)
+    {
+      unSaved = false;
+      memcpy(m_szFilename, strFilename, lstrlen(strFilename) * sizeof(TCHAR));
+      setTitle();
+    }
  
   }
 }
@@ -228,20 +239,51 @@ void GraphEditor::onCopy()
 
 void GraphEditor::onCut()
 {
-  m_pGView->cut();
+  if(m_pGView->cut())
+  {
+    unSaved = true;
+    setTitle();
+  }
 }
 
 void GraphEditor::onPaste()
 {
-  m_pGView->paste();
+  if(m_pGView->paste())
+  {
+    unSaved = true;
+    setTitle();
+  }
 }
 
 void GraphEditor::onUndo()
 {
-  m_pGView->undo();
+  if(m_pGView->undo())
+  {
+    unSaved = true;
+    setTitle();
+  }
 }
 
 void GraphEditor::onRedo()
 {
-  m_pGView->redo();
+  if(m_pGView->redo())
+  {
+    unSaved = true;
+    setTitle();
+  }
+}
+
+void GraphEditor::setTitle()
+{
+  Vector<TCHAR> title;
+  if(unSaved)
+  {
+    title.push_back('*');
+  }
+  for(int i = 0; i < lstrlen(m_szFilename); i++)
+  {
+    title.push_back(m_szFilename[i]);
+  }
+  title.push_back(NULL);
+  SetWindowText(m_hWnd, title.data());
 }

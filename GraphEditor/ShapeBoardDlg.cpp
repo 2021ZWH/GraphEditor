@@ -12,6 +12,7 @@ ShapeBoardDlg::~ShapeBoardDlg()
   ImageList_Destroy(m_imageList);
   for(int i = 0; i < m_bitmapVec.size(); i++)
     DeleteObject(m_bitmapVec[i]);
+  destroy();
 }
 
 void ShapeBoardDlg::init()
@@ -40,7 +41,7 @@ void ShapeBoardDlg::init()
   {
     HICON hIcon = LoadIcon(m_hIns, MAKEINTRESOURCE(icoID[i]));
     m_bitmapVec.push_back(hIcon);
-    ImageList_AddIcon(m_imageList, hIcon, NULL);
+    ImageList_AddIcon(m_imageList, hIcon);
   }
 
   // 初始化线宽组合框
@@ -109,6 +110,16 @@ void ShapeBoardDlg::init()
   syncBoard();
 }
 
+void ShapeBoardDlg::destroy()
+{
+  if(m_hWnd != NULL)
+  {
+    SetWindowLongPtr(m_hWnd, GWLP_USERDATA, NULL);
+    DestroyWindow(m_hWnd);
+    m_hWnd = NULL;
+  }
+}
+
 void ShapeBoardDlg::showDialog(bool flag)
 {
   syncBoard();
@@ -171,8 +182,8 @@ void ShapeBoardDlg::onCommad(WPARAM wParam, LPARAM lParam)
     showDialog(false);
     break;
   case IDC_BUTTON_APPLY:
-    if(syncData())
-      SendMessage(m_hParent, GE_SB_DATACHANGE, 0, 0);
+    syncData();
+    SendMessage(m_hParent, GE_SB_DATACHANGE, 0, 0);
     break;
   }
 }

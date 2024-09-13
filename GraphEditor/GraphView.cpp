@@ -69,6 +69,7 @@ void GraphView::resize(int w,int h)
 
 void GraphView::setMode(ToolType toolType)
 {
+  m_pToolMger->clearShape();
   m_pToolMger->setToolType(toolType);
 }
 
@@ -403,6 +404,10 @@ void GraphView::onMouseWheel(WPARAM wParam, LPARAM lParam)
       InvalidateRect(m_hWnd, NULL, false);
     }
   }
+  else
+  {
+    m_pSbMger->scroll(0, -zPos);
+  }
 }
 
 void GraphView::startDraw(const POINT& pos)
@@ -508,7 +513,11 @@ void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
       if(m_pToolMger->isValidShape())
       {
         PointF posF = mapToScene(pos);
-        m_pToolMger->drawRubberBand(hdc, mapToView(m_aptF[0]), mapToView(m_aptF[1]), mapToView(m_aptF[2]), mapToView(m_aptF[3]));
+        m_pToolMger->drawRubberBand(hdc, 
+                    mapToView(m_aptF[0]), 
+                    mapToView(m_aptF[1]), 
+                    mapToView(m_aptF[2]), 
+                    mapToView(m_aptF[3]));
         if(fLButtonDown)
         {
           m_aptF[2].x = 2 * m_aptF[3].x - posF.x;
@@ -520,7 +529,11 @@ void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
           m_aptF[2] = m_aptF[4] = posF;
           m_aptF[3] = posF;
         }
-        m_pToolMger->drawRubberBand(hdc, mapToView(m_aptF[0]), mapToView(m_aptF[1]), mapToView(m_aptF[2]), mapToView(m_aptF[3]));
+        m_pToolMger->drawRubberBand(hdc, 
+                    mapToView(m_aptF[0]), 
+                    mapToView(m_aptF[1]), 
+                    mapToView(m_aptF[2]), 
+                    mapToView(m_aptF[3]));
       }
       break;
     }

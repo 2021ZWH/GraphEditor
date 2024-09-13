@@ -25,6 +25,14 @@ struct ShapeProperty
   COLORREF lineColor = BGR_BLACK;
   COLORREF fillColor = BGR_WHITE;
   bool fTransparent = true;
+
+  bool operator == (const ShapeProperty& other) const
+  {
+    return (lineWidth == other.lineWidth &&
+      lineColor == other.lineColor &&
+      fillColor == other.fillColor &&
+      fTransparent == other.fTransparent);
+  }
 };
 
 struct PointF

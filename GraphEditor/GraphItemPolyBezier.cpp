@@ -187,7 +187,7 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
 
 ControlHandler* GraphItemPolyBezier::getHandlerByPos(const PointF& pos)
 {
-  for(int i = 1; i + 3 < m_ctrHandlers.size(); i += 3)
+  for(int i = 1; i < m_ctrHandlers.size(); i += 3)
   {
     if(m_ctrHandlers[i]->isPointInHandler(pos)) 
       return m_ctrHandlers[i];
