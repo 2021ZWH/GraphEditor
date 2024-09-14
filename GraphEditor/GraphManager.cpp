@@ -172,12 +172,7 @@ bool GraphManager::paste()
 
   if(ret == 0)
   {
-    m_selectMger.clearSelect();
-    for(int i = 0; i < shapeVec.size(); i++)
-    {
-      m_shapeVec.push_back(shapeVec[i]);
-      m_selectMger.addShape(shapeVec[i]);
-    }
+    addShape(shapeVec);
 
     freshView();
   }
@@ -246,6 +241,19 @@ void GraphManager::addShape(GraphItemShape* shape)
   m_selectMger.addShape(shape);
 
   GraphCommand *cmd = new GraphAddCommand(shape,&m_selectMger);
+  m_pCmdMger->addCommand(cmd);
+}
+
+void GraphManager::addShape(const Vector<GraphItemShape*>& shapeVec)
+{
+  m_selectMger.clearSelect();
+  for(int i = 0; i < shapeVec.size(); i++)
+  {
+    m_shapeVec.push_back(shapeVec[i]);
+    m_selectMger.addShape(shapeVec[i]);
+  }
+
+  GraphCommand* cmd = new GraphAddCommand(shapeVec, &m_selectMger);
   m_pCmdMger->addCommand(cmd);
 }
 

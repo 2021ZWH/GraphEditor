@@ -38,6 +38,7 @@ public:
 
   bool isSelect() const;
   void addShape(GraphItemShape* shape);
+  void addShape(const Vector<GraphItemShape*>& shapeVec);
   bool delSelectShape();
   void setSelectShape(const PointF& pos);
   void setSelectShape(const RectF& rectf);

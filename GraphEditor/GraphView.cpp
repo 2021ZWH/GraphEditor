@@ -70,6 +70,7 @@ void GraphView::resize(int w,int h)
 void GraphView::setMode(ToolType toolType)
 {
   m_pToolMger->clearShape();
+  isDrawing = false;
   m_pToolMger->setToolType(toolType);
 }
 
