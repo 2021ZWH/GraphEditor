@@ -9,14 +9,14 @@
 #pragma comment(lib ,"Comctl32.lib")
 
 enum IDM_TBBUTTON {
-  BT_EDITMODE = 1,
-  BT_LINE,
+  BT_EDITMODE =0,
+  BT_LINE ,
   BT_POLYLINE,
   BT_BEZIER,
-  BT_RECTANGLE,
   BT_CIRCLE,
   BT_ELLIPTIC,
-  BT_DASHBOARD
+  BT_RECTANGLE,
+  BT_DASHBOARD 
 };
 
 class ToolBar : public Window
@@ -27,6 +27,7 @@ public:
   void init();
   void destroy();
   void resize();
+  void checkButton(IDM_TBBUTTON idx);
 private:
   HIMAGELIST m_imgList = nullptr;
   Vector<HICON> m_iconVec;

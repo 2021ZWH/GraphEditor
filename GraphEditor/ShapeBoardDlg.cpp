@@ -179,7 +179,7 @@ void ShapeBoardDlg::onCommad(WPARAM wParam, LPARAM lParam)
   switch(wParam)
   {
   case IDC_MYICON:
-    showDialog(false);
+    SendMessage(m_hParent,GE_SB_HIDE, 0, 0);
     break;
   case IDC_BUTTON_APPLY:
     syncData();

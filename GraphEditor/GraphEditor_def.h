@@ -15,7 +15,7 @@
 
 #define GE_BASE           (WM_USER)
 #define GE_SB_DATACHANGE  (GE_BASE+1)
-#define GE_GV_FOCUSCHANGE (GE_BASE+2)
+#define GE_SB_HIDE (GE_BASE+2)
 
 #include <math.h>
 

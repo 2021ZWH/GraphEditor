@@ -93,6 +93,12 @@ LRESULT CALLBACK GraphEditor::runProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   case WM_SIZE:
     onSize(wParam,lParam);
     break;
+  case GE_SB_HIDE:
+  {
+    m_pSBDlg->showDialog(false);
+    m_ptoolBar->checkButton(BT_DASHBOARD);
+    break;
+  }
   case GE_SB_DATACHANGE:
   {
     ShapeProperty shapeProperty = m_pSBDlg->getShapeProperty();
@@ -134,27 +140,35 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
   switch(LOWORD(wParam))
   {
   case BT_EDITMODE:
+    m_ptoolBar->checkButton(BT_EDITMODE);
     m_pGView->setMode(ToolType::EDIT_MOUSE);
     break;
   case BT_LINE:
+    m_ptoolBar->checkButton(BT_LINE);
     m_pGView->setMode(ToolType::DRAW_LINE);
     break;
   case BT_POLYLINE:
+    m_ptoolBar->checkButton(BT_POLYLINE);
     m_pGView->setMode(ToolType::DRAW_POLYLINE);
     break;
   case BT_BEZIER:
+    m_ptoolBar->checkButton(BT_BEZIER);
     m_pGView->setMode(ToolType::DRAW_BEZIER);
     break;
   case BT_CIRCLE:
+    m_ptoolBar->checkButton(BT_CIRCLE);
     m_pGView->setMode(ToolType::DRAW_CIRCLE);
     break;
   case BT_ELLIPTIC:
+    m_ptoolBar->checkButton(BT_ELLIPTIC);
     m_pGView->setMode(ToolType::DRAW_ELLIPTIC);
     break;
   case BT_RECTANGLE:
+    m_ptoolBar->checkButton(BT_RECTANGLE);
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);
     break;
   case BT_DASHBOARD:
+    m_ptoolBar->checkButton(BT_DASHBOARD);
     m_pSBDlg->showDialog(true);
     break;
   case IDM_SAVE:

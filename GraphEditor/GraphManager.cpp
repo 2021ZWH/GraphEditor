@@ -1,4 +1,3 @@
-
 #include "GraphManager.h"
 #include "GraphCoder.h"
 
@@ -60,11 +59,11 @@ HCURSOR GraphManager::getCursor(const PointF& scenePos)
 
 void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
 {   
-  // 在00处画一个举行
+  // 在00处画一个矩形
   double sx = 0 - rectf.left;
   double sy = 0 - rectf.top;
  
-  Rectangle(hdc, sx, sy, sx + 800, sy + 800);//画图
+  Rectangle(hdc, sx, sy, sx + 800, sy + 800);
  
   for(int i = 0; i < m_shapeVec.size(); i++)
   {

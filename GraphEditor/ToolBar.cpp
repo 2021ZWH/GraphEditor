@@ -50,16 +50,16 @@ void ToolBar::init()
 
   TBBUTTON tbb[10] =
   {
-    { MAKELONG(iIcon[0], 0), BT_EDITMODE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { 0, BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL},
-    { MAKELONG(iIcon[1], 0), BT_LINE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[2], 0), BT_POLYLINE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[3], 0), BT_BEZIER, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[4], 0), BT_CIRCLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[5], 0), BT_ELLIPTIC, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { MAKELONG(iIcon[6], 0), BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL},
-    { 0, BT_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL },
-    { MAKELONG(iIcon[7], 0), BT_DASHBOARD, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, NULL}
+    { MAKELONG(iIcon[0], 0), BT_EDITMODE, TBSTATE_ENABLED,  BTNS_BUTTON , {0}, 0, NULL},
+    { 0, -1, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL},
+    { MAKELONG(iIcon[1], 0), BT_LINE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[2], 0), BT_POLYLINE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[3], 0), BT_BEZIER, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[4], 0), BT_CIRCLE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[5], 0), BT_ELLIPTIC, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[6], 0), BT_RECTANGLE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { 0, -1, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL },
+    { MAKELONG(iIcon[7], 0), BT_DASHBOARD, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL}
   };
   
   SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);   //计算工具栏大小
@@ -71,4 +71,25 @@ void ToolBar::init()
 void ToolBar::resize()
 {
   SendMessage(m_hWnd, TB_AUTOSIZE, 0, 0);
+}
+
+void ToolBar::checkButton(IDM_TBBUTTON idx)
+{
+  if(idx == 7)
+  {
+    bool ret = SendMessage(m_hWnd, TB_ISBUTTONPRESSED, idx, 0);
+      SendMessage(m_hWnd, TB_PRESSBUTTON, idx, !ret);
+  }
+  else
+  {
+    SendMessage(m_hWnd, TB_PRESSBUTTON, idx, true);
+    for(int i = 0; i < 7; i++)
+    {
+      if(idx == i) continue;
+
+      if(SendMessage(m_hWnd, TB_ISBUTTONPRESSED, i, 0))
+        SendMessage(m_hWnd, TB_PRESSBUTTON, i, false);
+    }
+  }
+  
 }
