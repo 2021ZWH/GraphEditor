@@ -1,4 +1,4 @@
- #ifndef GRAPH_ITEM_SHAPE_H
+#ifndef GRAPH_ITEM_SHAPE_H
 #define GRAPH_ITEM_SHAPE_H
 
 #include <Windows.h>
@@ -49,8 +49,6 @@ protected:
   ShapeProperty m_shapeProper;
 
   bool m_fVisible = true;
-  
-  
 };
 
 #endif // GRAPH_ITEM_SHAPE_H

@@ -3,7 +3,7 @@
 
 #define BGR_RED        0x000000FF
 #define BGR_GREEN      0x0000FF00
-#define BGR_BLUE       RGB(0,0,255)
+#define BGR_BLUE       0x00FF0000
 #define BGR_BLACK      0x00000000
 #define BGR_WHITE      0x00FFFFFF
 #define BGR_YELLOW     0x0000FFFF
@@ -15,7 +15,7 @@
 
 #define GE_BASE           (WM_USER)
 #define GE_SB_DATACHANGE  (GE_BASE+1)
-#define GE_SB_HIDE (GE_BASE+2)
+#define GE_SB_HIDE        (GE_BASE+2)
 
 #include <math.h>
 
