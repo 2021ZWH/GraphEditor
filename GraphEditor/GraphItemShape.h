@@ -20,7 +20,7 @@ enum ShapeType
 class GraphItemShape
 {
 public:
-  GraphItemShape() = default;
+  GraphItemShape();
   virtual ~GraphItemShape();
   virtual Vector<TCHAR> toText();
   virtual void drawShape(HDC hdc,double xoff, double yoff) = 0;
@@ -44,8 +44,8 @@ protected:
 protected:
   Vector<ControlHandler*> m_ctrHandlers;
   ControlHandler* m_selectHandler = nullptr;
-
-  ShapeType m_shapeType = SHAPE_UNKNOWN;
+  XFORM m_xForm;
+  ShapeType m_shapeType;
   ShapeProperty m_shapeProper;
 
   bool m_fVisible = true;

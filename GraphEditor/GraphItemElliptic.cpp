@@ -3,6 +3,7 @@
 #include <wchar.h>
 
 GraphItemElliptic::GraphItemElliptic(const PointF &beginPos, const PointF &endPos)
+  :GraphItemShape::GraphItemShape()
 {
   m_shapeType = SHAPE_ELLIPTIC;
 

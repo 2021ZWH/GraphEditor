@@ -3,6 +3,7 @@
 #include <wchar.h>
 
 GraphItemPolyBezier::GraphItemPolyBezier()
+  :GraphItemShape::GraphItemShape()
 {
   m_shapeType = SHAPE_POLYBEZIER;
 }

@@ -144,6 +144,7 @@
     <ClInclude Include="GraphItemPolyline.h" />
     <ClInclude Include="GraphItemRectangle.h" />
     <ClInclude Include="GraphItemShape.h" />
+    <ClInclude Include="GraphItemText.h" />
     <ClInclude Include="GraphView.h" />
     <ClInclude Include="GraphManager.h" />
     <ClInclude Include="List.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="GraphItemPolyline.cpp" />
     <ClCompile Include="GraphItemRectangle.cpp" />
     <ClCompile Include="GraphItemShape.cpp" />
+    <ClCompile Include="GraphItemText.cpp" />
     <ClCompile Include="GraphView.cpp" />
     <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="ScrollBarManager.cpp" />

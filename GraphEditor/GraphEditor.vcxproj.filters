@@ -105,6 +105,9 @@
     <ClInclude Include="ShapeBoardDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GraphItemText.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -171,6 +174,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ShapeBoardDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphItemText.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,7 +19,7 @@ public:
   bool shapeResizeTo(const PointF &newPos, ControlHandler* handler) override;
 private:
   void updateCtrHandler();
-private:
+protected:
   Vector<PointF> m_aptF;
 };
 

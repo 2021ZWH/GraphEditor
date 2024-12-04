@@ -3,7 +3,7 @@
 #include <wchar.h>
 
 GraphItemLine::GraphItemLine(PointF posA, PointF posB)
-  :m_posA(posA),m_posB(posB)
+  :GraphItemShape::GraphItemShape(),m_posA(posA),m_posB(posB)
 {
   m_shapeType = SHAPE_LINE;
   m_ctrHandlers.resize(2);

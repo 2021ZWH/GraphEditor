@@ -3,6 +3,7 @@
 #include <wchar.h>
 
 GraphItemCircle::GraphItemCircle(const PointF &beginPos, const PointF &endPos)
+  :GraphItemShape::GraphItemShape()
 {
   m_shapeType = SHAPE_CIRCLE;
 

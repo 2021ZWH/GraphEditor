@@ -3,6 +3,7 @@
 #include <wchar.h>
 
 GraphItemPolyline::GraphItemPolyline(const PointF &startPos)
+  :GraphItemShape::GraphItemShape()
 {
   m_shapeType = SHAPE_POLYLINE;
   addPos(startPos);

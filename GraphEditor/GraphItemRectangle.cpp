@@ -3,6 +3,7 @@
 #include <wchar.h>
 
 GraphItemRectangle::GraphItemRectangle(PointF beginPos, PointF endPos)
+  :GraphItemShape::GraphItemShape()
 {
   m_shapeType = SHAPE_RECTANGLE;
   m_aptF.resize(4);

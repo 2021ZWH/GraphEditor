@@ -1,5 +1,11 @@
 #include "GraphItemShape.h"
 
+GraphItemShape::GraphItemShape()
+  :m_xForm({ 1,0,0,1,0,0 }),m_shapeType(SHAPE_UNKNOWN)
+{
+
+}
+
 GraphItemShape::~GraphItemShape()
 {
   clearCtrHandler();
