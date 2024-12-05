@@ -10,7 +10,7 @@ public:
   GraphItemPolyline(const PointF& startPos);
   ~GraphItemPolyline();
   Vector<TCHAR> toText() override;
-  void drawShape(HDC hdc, double xoff, double yoff) override;
+  void drawShape(HDC hdc) override;
   void move(double dx, double dy) override;
   bool isPointUpShape(const PointF& pos) override;
   bool isRectCrossShape(const RectF& rectf) override;

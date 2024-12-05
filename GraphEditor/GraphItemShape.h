@@ -23,8 +23,8 @@ public:
   GraphItemShape();
   virtual ~GraphItemShape();
   virtual Vector<TCHAR> toText();
-  virtual void drawShape(HDC hdc,double xoff, double yoff) = 0;
-  virtual void drawHandler(HDC hdc, double xoff, double yoff, double scale);
+  virtual void drawShape(HDC hdc) = 0;
+  virtual void drawHandler(HDC hdc);
   virtual ControlHandler* getHandlerByPos(const PointF& pos);
   virtual void move(double dx, double dy) = 0;
   virtual bool isPointUpShape(const PointF& pos) = 0;

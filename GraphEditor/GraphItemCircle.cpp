@@ -48,12 +48,12 @@ Vector<TCHAR> GraphItemCircle::toText()
   return vec;
 }
 
-void GraphItemCircle::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemCircle::drawShape(HDC hdc)
 {
-  int left = min(m_aptF[0].x, m_aptF[2].x) - xoff;
-  int right = max(m_aptF[0].x, m_aptF[2].x) - xoff;
-  int top = min(m_aptF[0].y, m_aptF[2].y) - yoff;
-  int bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
+  int left = min(m_aptF[0].x, m_aptF[2].x);
+  int right = max(m_aptF[0].x, m_aptF[2].x);
+  int top = min(m_aptF[0].y, m_aptF[2].y);
+  int bottom = max(m_aptF[0].y, m_aptF[2].y);
 
   HBRUSH hbru;
   if(m_shapeProper.fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -66,8 +66,13 @@ void GraphItemCircle::drawShape(HDC hdc, double xoff, double yoff)
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
   HBRUSH oldBru = (HBRUSH)SelectObject(hdc, hbru);
 
+  XFORM oldXForm;
+  GetWorldTransform(hdc, &oldXForm);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
+
   Ellipse(hdc, left, top, right, bottom);
 
+  SetWorldTransform(hdc, &oldXForm);
   SelectObject(hdc, oldBru);
   SelectObject(hdc, hpen);
 

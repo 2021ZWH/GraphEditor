@@ -12,9 +12,9 @@ GraphItemText::~GraphItemText()
   GraphItemRectangle::~GraphItemRectangle();
 }
 
-void GraphItemText::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemText::drawShape(HDC hdc)
 {
-  GraphItemRectangle::drawShape(hdc, xoff, yoff);
+  GraphItemRectangle::drawShape(hdc);
 
   XFORM OldForm;
   GetWorldTransform(hdc, &OldForm);

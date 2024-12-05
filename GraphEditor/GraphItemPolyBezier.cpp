@@ -34,7 +34,7 @@ Vector<TCHAR> GraphItemPolyBezier::toText()
   return vec;
 }
 
-void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemPolyBezier::drawShape(HDC hdc)
 {
   if(m_aptf.size() < 6) return;
 
@@ -43,8 +43,8 @@ void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
 
   for(int i = 1; i < m_aptf.size()-1; i++)
   {
-    apt[i-1].x = (m_aptf[i].x - xoff + 0.5);
-    apt[i-1].y = (m_aptf[i].y - yoff + 0.5);
+    apt[i-1].x = m_aptf[i].x;
+    apt[i-1].y = m_aptf[i].y;
   }
 
   HPEN hpen;
@@ -52,8 +52,13 @@ void GraphItemPolyBezier::drawShape(HDC hdc, double xoff, double yoff)
   else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
 
+  XFORM oldXForm;
+  GetWorldTransform(hdc, &oldXForm);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
+
   PolyBezier(hdc, apt, m_aptf.size() - 2);
 
+  SetWorldTransform(hdc, &oldXForm);
   SelectObject(hdc, oldPen);
   if(m_shapeProper.lineWidth)
     DeleteObject(hpen);
@@ -140,12 +145,12 @@ void GraphItemPolyBezier::addPos(const PointF& pos)
   m_ctrHandlers.push_back(handler);
 }
 
-void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double scale)
+void GraphItemPolyBezier::drawHandler(HDC hdc)
 {
   for(int i = 1; i < m_ctrHandlers.size(); i++)
   {
     if(i % 3 == 1) //端点控制点都要绘制
-      m_ctrHandlers[i]->draw(hdc, xoff, yoff, 12 * scale);
+      m_ctrHandlers[i]->draw(hdc);
   }
 
   if(m_selectHandler) // 若有选中的控制点
@@ -159,11 +164,9 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
 
     if(id - 1 > 0)
     {
-      m_ctrHandlers[id - 1]->draw(hdc, xoff, yoff, 12 * scale);
+      m_ctrHandlers[id - 1]->draw(hdc);
       PointF posA = m_aptf[id - 1];
       PointF posB = m_aptf[id];
-      posA.x -= xoff, posA.y -= yoff;
-      posB.x -= xoff, posB.y -= yoff;
       
       MoveToEx(hdc, posA.x, posA.y, NULL);
       LineTo(hdc, posB.x, posB.y);
@@ -171,11 +174,9 @@ void GraphItemPolyBezier::drawHandler(HDC hdc, double xoff, double yoff, double 
 
     if(id + 1 < m_ctrHandlers.size()-1)
     {
-      m_ctrHandlers[id + 1]->draw(hdc, xoff, yoff, 12 * scale);
+      m_ctrHandlers[id + 1]->draw(hdc);
       PointF posA = m_aptf[id + 1];
       PointF posB = m_aptf[id];
-      posA.x -= xoff, posA.y -= yoff;
-      posB.x -= xoff, posB.y -= yoff;
 
       MoveToEx(hdc, posA.x, posA.y, NULL);
       LineTo(hdc, posB.x, posB.y);

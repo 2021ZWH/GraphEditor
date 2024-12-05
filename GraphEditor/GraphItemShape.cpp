@@ -43,12 +43,17 @@ Vector<TCHAR> GraphItemShape::toText()
   return vec;
 }
 
-void GraphItemShape::drawHandler(HDC hdc, double xoff, double yoff, double scale)
+void GraphItemShape::drawHandler(HDC hdc)
 {
+  XFORM oldXform;
+  GetWorldTransform(hdc, &oldXform);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
   for(int i = 0; i < m_ctrHandlers.size(); i++)
   {
-    m_ctrHandlers[i]->draw(hdc, xoff, yoff, 12*scale);
+    m_ctrHandlers[i]->draw(hdc);
   }
+
+  SetWorldTransform(hdc,&oldXform);
 }
 
 ControlHandler* GraphItemShape::getHandlerByPos(const PointF& pos)

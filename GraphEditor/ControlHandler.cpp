@@ -35,16 +35,14 @@ ControlHandler::ControlHandler(GraphItemShape *owner,HandlerType type,int id)
   }
 }
 
-void ControlHandler::draw(HDC hdc,double xoff,double yoff,double w)
+void ControlHandler::draw(HDC hdc)
 {
-  double x = m_ctrPos.x - xoff;
-  double y = m_ctrPos.y - yoff;
   HBRUSH hbru = (HBRUSH)GetStockObject(BLACK_BRUSH);
   HBRUSH hOldBru = (HBRUSH)SelectObject(hdc, hbru);
   HPEN hPen = (HPEN)GetStockObject(BLACK_PEN);
   HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
   
-  Rectangle(hdc, x - w / 2, y - w / 2, x + w / 2, y + w / 2);
+  Rectangle(hdc, m_ctrPos.x - 6, m_ctrPos.y - 6, m_ctrPos.x + 6, m_ctrPos.y + 6);
 
   SelectObject(hdc, hOldBru);
   SelectObject(hdc, hOldPen);

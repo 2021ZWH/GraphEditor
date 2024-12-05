@@ -12,7 +12,7 @@ public:
   GraphItemLine(PointF posA,PointF posB);
   ~GraphItemLine();
   Vector<TCHAR> toText() override;
-  void drawShape(HDC hdc, double xoff, double yoff);
+  void drawShape(HDC hdc);
   void move(double dx, double dy);
   bool isPointUpShape(const PointF& pos);
   bool isRectCrossShape(const RectF& rectf);

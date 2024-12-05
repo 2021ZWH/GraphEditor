@@ -249,29 +249,37 @@ void GraphView::onPaint()
   int xClient = getWidth();
   int yClient = getHeight();
 
-  int mapW = xClient / m_scale;
-  int mapH = yClient / m_scale;
-
   HDC hdcMem = CreateCompatibleDC(hdc);
-  HBITMAP hbmMem = CreateCompatibleBitmap(hdc, mapW, mapH);
+  HBITMAP hbmMem = CreateCompatibleBitmap(hdc, xClient, yClient);
   SelectObject(hdcMem, hbmMem);
-  RECT rec = { 0,0,mapW,mapH };
-
-  PointF beginPos = mapToScene({ 0,0 });
-  PointF endPos = mapToScene({ xClient,yClient });
-
-  RectF updateRecf;
-  updateRecf.left = beginPos.x;
-  updateRecf.top = beginPos.y;
-  updateRecf.right = endPos.x;
-  updateRecf.bottom = endPos.y;
+  RECT rec = { 0,0,xClient,yClient };
 
   FillRect(hdcMem, &rec, m_hBgdBru);
-  m_pGhMger->paint(hdcMem, updateRecf,m_scale);
+
+  SetGraphicsMode(hdcMem, GM_ADVANCED);
+  XFORM oldForm;
+  GetWorldTransform(hdcMem, &oldForm);
+
+  PointF centerPos = mapToScene({ xClient / 2,yClient / 2 });
+
+  int xPos = m_pSbMger->getHBarPos();
+  int yPos = m_pSbMger->getVBarPos();
+
+  int xoff = xPos * m_pSbMger->getUnitW() - m_pGhMger->getWidth() / 2;
+  int yoff = yPos * m_pSbMger->getUnitH() - m_pGhMger->getHeight() / 2;
   
-  StretchBlt(hdc, 0, 0, xClient, yClient,
-             hdcMem, 0, 0, mapW, mapH, SRCCOPY);
- // BitBlt(hdc, 0, 0, xClient, yClient, hdcMem, 0, 0, SRCCOPY);
+  XFORM xform = { m_scale,0,0,m_scale,0,0};
+  xform.eDx = centerPos.x * (1 - m_scale) - xoff;
+  xform.eDy = centerPos.y * (1 - m_scale) - yoff;
+
+  ModifyWorldTransform(hdcMem, &xform, MWT_RIGHTMULTIPLY);
+
+  m_pGhMger->paint(hdcMem);
+
+  /*StretchBlt(hdc, 0, 0, xClient, yClient,
+             hdcMem, 0, 0, mapW, mapH, SRCCOPY);*/
+  SetWorldTransform(hdcMem, &oldForm);
+  BitBlt(hdc, 0, 0, xClient, yClient, hdcMem, 0, 0, SRCCOPY);
 
   DeleteObject(hbmMem);
   DeleteDC(hdcMem);

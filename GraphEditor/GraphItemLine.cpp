@@ -32,23 +32,29 @@ Vector<TCHAR> GraphItemLine::toText()
   return vec;
 }
 
-void GraphItemLine::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemLine::drawShape(HDC hdc)
 {
   POINT pos;
-  double sx = m_posA.x - xoff;
-  double sy = m_posA.y - yoff;
-  double ex = m_posB.x - xoff;
-  double ey = m_posB.y - yoff;
+  double sx = m_posA.x;
+  double sy = m_posA.y;
+  double ex = m_posB.x;
+  double ey = m_posB.y;
 
   HPEN hpen;
   if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
   else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+
+  XFORM oldXForm;
+  GetWorldTransform(hdc, &oldXForm);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
   
   MoveToEx(hdc, sx, sy, &pos);
   LineTo(hdc, ex, ey);
 
   MoveToEx(hdc, pos.x, pos.y,NULL);
+
+  SetWorldTransform(hdc, &oldXForm);
   SelectObject(hdc, oldPen);
 
   if(m_shapeProper.lineWidth)

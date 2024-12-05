@@ -26,7 +26,7 @@ public:
   UINT getHeight() const;
   HCURSOR getCursor(const PointF &scenePos);
 
-  void paint(HDC hdc, const RectF& rectf, double scale);
+  void paint(HDC hdc);
   bool save(const TCHAR* szFilename);
   bool open(const TCHAR* szFIlename);
   bool copy();

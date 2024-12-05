@@ -35,24 +35,25 @@ Vector<TCHAR> GraphItemPolyline::toText()
   return vec;
 }
 
-void GraphItemPolyline::drawShape(HDC hdc, double xoff, double yoff)
+void GraphItemPolyline::drawShape(HDC hdc)
 {
   HPEN hpen;
   if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
   else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
 
+  XFORM oldXForm;
+  GetWorldTransform(hdc, &oldXForm);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
+
   for(int i = 0; i < m_linePos.size() - 1; i++)
   {
     PointF startPos = m_linePos[i];
     PointF endPos = m_linePos[i + 1];
-    startPos.x -= xoff;
-    startPos.y -= yoff;
-    endPos.x -= xoff;
-    endPos.y -= yoff;
     drawSingleLine(hdc, startPos, endPos);
   }
 
+  SetWorldTransform(hdc, &oldXForm);
   SelectObject(hdc, oldPen);
   if(m_shapeProper.lineWidth)
     DeleteObject(hpen);

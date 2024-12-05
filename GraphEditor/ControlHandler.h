@@ -24,7 +24,7 @@ class ControlHandler
 {
 public:
   ControlHandler(GraphItemShape *owner,HandlerType type, int id);
-  void draw(HDC hdc,double xoff,double yoff,double w);
+  void draw(HDC hdc);
   void move(double dx, double dy);
   bool isPointInHandler(const PointF &pos);
   void setPos(const PointF& pos);

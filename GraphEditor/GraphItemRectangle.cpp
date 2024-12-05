@@ -51,13 +51,13 @@ Vector<TCHAR> GraphItemRectangle::toText()
   return vec;
 }
 
-void GraphItemRectangle::drawShape(HDC hdc,double xoff, double yoff)
+void GraphItemRectangle::drawShape(HDC hdc)
 {
   RectF rect;
-  rect.left = min(m_aptF[0].x, m_aptF[2].x) - xoff;
-  rect.right = max(m_aptF[0].x, m_aptF[2].x) - xoff;
-  rect.top = min(m_aptF[0].y, m_aptF[2].y) - yoff;
-  rect.bottom = max(m_aptF[0].y, m_aptF[2].y) - yoff;
+  rect.left = min(m_aptF[0].x, m_aptF[2].x);
+  rect.right = max(m_aptF[0].x, m_aptF[2].x);
+  rect.top = min(m_aptF[0].y, m_aptF[2].y);
+  rect.bottom = max(m_aptF[0].y, m_aptF[2].y);
   
   HBRUSH hbru;
   if(m_shapeProper.fTransparent) hbru = (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -68,9 +68,14 @@ void GraphItemRectangle::drawShape(HDC hdc,double xoff, double yoff)
   if(m_shapeProper.lineWidth == 0) hpen = (HPEN)GetStockObject(NULL_PEN);
   else hpen = CreatePen(PS_SOLID, m_shapeProper.lineWidth, m_shapeProper.lineColor);
   HPEN oldPen = (HPEN)SelectObject(hdc, hpen);
+
+  XFORM oldXForm;
+  GetWorldTransform(hdc, &oldXForm);
+  ModifyWorldTransform(hdc, &m_xForm, MWT_RIGHTMULTIPLY);
   
   Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
 
+  SetWorldTransform(hdc, &oldXForm);
   SelectObject(hdc, oldBru);
   SelectObject(hdc, hpen);
 

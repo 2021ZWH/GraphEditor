@@ -57,22 +57,18 @@ HCURSOR GraphManager::getCursor(const PointF& scenePos)
   return LoadCursor(NULL, IDC_ARROW);
 }
 
-void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
+void GraphManager::paint(HDC hdc)
 {   
   // 在00处画一个矩形
-  double sx = 0 - rectf.left;
-  double sy = 0 - rectf.top;
- 
-  Rectangle(hdc, sx, sy, sx + 800, sy + 800);
+ // Rectangle(hdc, 0, 0, 800, 800);
  
   for(int i = 0; i < m_shapeVec.size(); i++)
   {
     if(!m_shapeVec[i]->isVisible())
       continue;
-    if(m_shapeVec[i]->isRectCrossShape(rectf))
-    {
-      m_shapeVec[i]->drawShape(hdc, rectf.left, rectf.top);
-    }
+  
+    m_shapeVec[i]->drawShape(hdc);
+    
   }
 
   if(isSelect())
@@ -81,7 +77,7 @@ void GraphManager::paint(HDC hdc, const RectF &rectf,double scale)
 
     for(int i = 0; i < vec.size();i++)
     {
-      vec[i]->drawHandler(hdc, rectf.left, rectf.top, 1.0/scale);
+      vec[i]->drawHandler(hdc);
     }
   }
 }
