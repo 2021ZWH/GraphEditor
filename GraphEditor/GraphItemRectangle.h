@@ -17,7 +17,7 @@ public:
   bool isPointUpShape(const PointF& pos) override;
   bool isRectCrossShape(const RectF& rectf) override;
   bool shapeResizeTo(const PointF &newPos, ControlHandler* handler) override;
-private:
+protected:
   void updateCtrHandler();
 protected:
   Vector<PointF> m_aptF;

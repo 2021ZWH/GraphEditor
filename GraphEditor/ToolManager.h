@@ -12,6 +12,7 @@ enum ToolType{
   DRAW_CIRCLE,
   DRAW_ELLIPTIC,
   DRAW_RECTANGLE,
+  DRAW_TEXTSHAPE,
 };
 
 class ToolManager
