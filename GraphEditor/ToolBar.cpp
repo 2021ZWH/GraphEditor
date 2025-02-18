@@ -37,9 +37,21 @@ void ToolBar::init()
 
   m_imgList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 8, 0);
 
-  WORD icoId[8] = { IDI_CURSOR,IDI_LINE,IDI_POLYLINE,IDI_BEZIER,IDI_CIRCLE,IDI_ELLIPTIC,IDI_RECTANGLE,IDI_DASHBOARD };
-  int iIcon[8];
-  for(int i = 0; i < 8; i++)
+  WORD icoId[] = { IDI_CURSOR,
+                   IDI_LINE,
+                   IDI_POLYLINE,
+                   IDI_BEZIER,
+                   IDI_CIRCLE,
+                   IDI_ELLIPTIC,
+                   IDI_RECTANGLE,
+                   IDI_TEXTSHAPE,
+                   IDI_DASHBOARD };
+
+  int idNum = sizeof icoId / sizeof WORD;
+
+  int* iIcon = new int[idNum];
+
+  for(int i = 0; i < idNum; i++)
   {
     HICON hicon = (HICON)LoadIcon(m_hIns, MAKEINTRESOURCE(icoId[i]));
     m_iconVec.push_back(hicon);
@@ -48,7 +60,7 @@ void ToolBar::init()
  
   SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_imgList);
 
-  TBBUTTON tbb[10] =
+  TBBUTTON tbb[] =
   {
     { MAKELONG(iIcon[0], 0), BT_EDITMODE, TBSTATE_ENABLED,  BTNS_BUTTON , {0}, 0, NULL},
     { 0, -1, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL},
@@ -58,8 +70,9 @@ void ToolBar::init()
     { MAKELONG(iIcon[4], 0), BT_CIRCLE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
     { MAKELONG(iIcon[5], 0), BT_ELLIPTIC, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
     { MAKELONG(iIcon[6], 0), BT_RECTANGLE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
+    { MAKELONG(iIcon[7], 0), BT_TEXTSHAPE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL},
     { 0, -1, TBSTATE_ENABLED, TBSTYLE_SEP, {0}, 0, NULL },
-    { MAKELONG(iIcon[7], 0), BT_DASHBOARD, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL}
+    { MAKELONG(iIcon[8], 0), BT_DASHBOARD, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, NULL}
   };
   
   SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);   //计算工具栏大小
@@ -75,7 +88,7 @@ void ToolBar::resize()
 
 void ToolBar::checkButton(IDM_TBBUTTON idx)
 {
-  if(idx == 7)
+  if(idx == 8)
   {
     bool ret = SendMessage(m_hWnd, TB_ISBUTTONPRESSED, idx, 0);
       SendMessage(m_hWnd, TB_PRESSBUTTON, idx, !ret);
@@ -83,7 +96,7 @@ void ToolBar::checkButton(IDM_TBBUTTON idx)
   else
   {
     SendMessage(m_hWnd, TB_PRESSBUTTON, idx, true);
-    for(int i = 0; i < 7; i++)
+    for(int i = 0; i < 8; i++)
     {
       if(idx == i) continue;
 

@@ -30,14 +30,18 @@
 #define IDI_TRANSPARENT                 163
 #define IDI_WHITE                       164
 #define IDI_YELLOW                      165
+#define IDI_TEXTSHAPE                   166
+#define IDD_TEXTINPUT                   170
 #define IDC_BUTTON_APPLY                1009
 #define IDC_COMBO_LINEWIDTH             1013
 #define IDC_COMBO_LINECOLOR             1014
 #define IDC_COMBO_FILLCOLOR             1015
 #define IDC_COMBOEX_LINEWIDTH           1017
 #define IDC_COMBOEX_LINECOLOR           1018
-#define IDC_COMBOBOXEX3                 1019
 #define IDC_COMBOEX_FILLCOLOR           1019
+#define IDCANCEL                        1019
+#define IDCANCEL1                       1019
+#define IDC_EDIT                        1020
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define IDM_OPEN                        32773
@@ -65,9 +69,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        166
+#define _APS_NEXT_RESOURCE_VALUE        171
 #define _APS_NEXT_COMMAND_VALUE         32801
-#define _APS_NEXT_CONTROL_VALUE         1018
+#define _APS_NEXT_CONTROL_VALUE         1021
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

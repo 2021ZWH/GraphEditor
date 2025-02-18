@@ -119,6 +119,17 @@ bool GraphView::setShapeProperty(const ShapeProperty& property)
   return m_pGhMger->setShapeProper(property);
 }
 
+void GraphView::setTempText(TCHAR* pText, int len)
+{
+  m_tempStr.clear();
+  m_tempStr.resize(len);
+  if(pText)
+  {
+    for(int i = 0; i < len; i++)
+      m_tempStr[i] = pText[i];
+  }
+}
+
 PointF GraphView::mapToScene(const POINT &viewPos)
 {
   PointF centerPos = { (double)getWidth() / 2,(double)getHeight() / 2 };
@@ -314,6 +325,7 @@ void GraphView::onKeyDown(WPARAM wParam, LPARAM lParam)
   
 void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
 {
+  SetCapture(m_hWnd);
   SetFocus(m_hWnd);
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
@@ -339,6 +351,7 @@ void GraphView::onMouseLButtonDown(WPARAM wParam, LPARAM lParam)
 
 void GraphView::onMouseLButtonUp(WPARAM wParam, LPARAM lParam)
 {
+  ReleaseCapture();
   int x = GET_X_LPARAM(lParam);
   int y = GET_Y_LPARAM(lParam);
   ToolType nowType = m_pToolMger->getToolType();
@@ -488,6 +501,7 @@ void GraphView::onDraw(bool fLButtonDown,const POINT& pos)
     case DRAW_CIRCLE:
     case DRAW_ELLIPTIC:
     case DRAW_RECTANGLE:
+    case DRAW_TEXTSHAPE:
     {
       if(fLButtonDown)
       {
@@ -593,6 +607,11 @@ void GraphView::endDraw(const POINT& pos)
     case DRAW_RECTANGLE:
       m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
       pItemShape = new GraphItemRectangle(m_startPos, m_endPos);
+      break;
+
+    case DRAW_TEXTSHAPE:
+      m_pToolMger->drawRubberBand(hdc, mapToView(m_startPos), mapToView(m_endPos));
+      pItemShape = new GraphItemText(m_startPos, m_endPos, m_tempStr.data(), m_tempStr.size());
       break;
 
     case DRAW_POLYLINE:
