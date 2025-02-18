@@ -130,7 +130,6 @@
     <ClInclude Include="ClipboardManager.h" />
     <ClInclude Include="ConSoleDebug.h" />
     <ClInclude Include="ControlHandler.h" />
-    <ClInclude Include="EditBox.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphCoder.h" />
     <ClInclude Include="GraphCommand.h" />
@@ -163,7 +162,6 @@
   <ItemGroup>
     <ClCompile Include="ClipboardManager.cpp" />
     <ClCompile Include="ControlHandler.cpp" />
-    <ClCompile Include="EditBox.cpp" />
     <ClCompile Include="GraphCoder.cpp" />
     <ClCompile Include="GraphCommand.cpp" />
     <ClCompile Include="GraphCommandManager.cpp" />
@@ -206,7 +204,6 @@
     <Image Include="ico\Polyline.ico" />
     <Image Include="ico\Rectangle.ico" />
     <Image Include="ico\red.ico" />
-    <Image Include="ico\TextShape.ico" />
     <Image Include="ico\transparent.ico" />
     <Image Include="ico\white.ico" />
     <Image Include="ico\yellow.ico" />

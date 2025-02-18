@@ -10,7 +10,6 @@
 #include "GraphItemPolyBezier.h"
 #include "GraphItemCircle.h"
 #include "GraphItemElliptic.h"
-#include "GraphItemText.h"
 #include "Vector.h"
 #include "SelectShapeManager.h"
 #include "GraphFile.h"

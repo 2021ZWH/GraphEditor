@@ -37,6 +37,7 @@ private:
 
   TCHAR m_szFilename[MAX_PATH] = L"Untitled";
   bool unSaved = true;
+
 };
 
 

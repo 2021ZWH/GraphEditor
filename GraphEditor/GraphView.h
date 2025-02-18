@@ -25,7 +25,6 @@ public:
   bool undo();
   bool redo();
   bool setShapeProperty(const ShapeProperty &property);
-  void setTempText(TCHAR* pText, int len);
   PointF mapToScene(const POINT &viewPos);
   POINT mapToView(const PointF &scenePos);
 private:
@@ -58,8 +57,6 @@ private:
   PointF m_aptF[5];
   ShapeProperty m_shapeProperty;
   bool isDrawing = false;
-
-  Vector<TCHAR> m_tempStr;
 
 };
 

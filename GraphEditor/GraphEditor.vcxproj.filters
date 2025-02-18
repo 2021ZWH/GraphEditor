@@ -108,9 +108,6 @@
     <ClInclude Include="GraphItemText.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EditBox.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphView.cpp">
@@ -182,9 +179,6 @@
     <ClCompile Include="GraphItemText.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EditBox.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphEditor.rc">
@@ -247,9 +241,6 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="ico\yellow.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="ico\TextShape.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

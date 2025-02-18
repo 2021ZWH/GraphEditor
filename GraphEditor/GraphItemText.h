@@ -11,7 +11,7 @@ public:
   void drawShape(HDC hdc) override;
   bool shapeResizeTo(const PointF& newPos, ControlHandler* handler) override;
 protected:
-  Vector<TCHAR> m_VecText;
+  Vector<TCHAR*> m_VecText;
 };
 
 #endif

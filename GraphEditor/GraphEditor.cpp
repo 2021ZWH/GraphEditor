@@ -2,7 +2,6 @@
 #include "GraphEditor_def.h"
 #include "resource.h"
 #include "ConSoleDebug.h"
-#include "EditBox.h"
 
 GraphEditor::GraphEditor(HINSTANCE hIns, HWND hParent)
 {
@@ -168,15 +167,6 @@ void GraphEditor::onCommand(WPARAM wParam, LPARAM lParam)
     m_ptoolBar->checkButton(BT_RECTANGLE);
     m_pGView->setMode(ToolType::DRAW_RECTANGLE);
     break;
-  case BT_TEXTSHAPE:
-  {
-    m_ptoolBar->checkButton(BT_TEXTSHAPE);
-    m_pGView->setMode(ToolType::DRAW_TEXTSHAPE);
-
-    EditBox editBox(m_hIns, m_hWnd);
-    m_pGView->setTempText(editBox.getStr(), editBox.getStrLen());
-    break;
-  }
   case BT_DASHBOARD:
     m_ptoolBar->checkButton(BT_DASHBOARD);
     m_pSBDlg->showDialog(true);
